@@ -129,9 +129,9 @@ export default class Panel extends Plugin {
 			return
 		}
 
-        let userName = await this.db.getUserById(args.id).username
+        let userName = await this.db.getUserById(args.id).data.username
 
-        this.db.addCoins(args.id, args.coins)
+        await this.db.addCoins(args.id, args.coins)
 
         user.send('error', {
             error: 'Coins added successfully.'
@@ -149,9 +149,9 @@ export default class Panel extends Plugin {
 			return
         }
 
-        let userName = await this.db.getUserById(args.id).username
+        let userName = await this.db.getUserById(args.id).data.username
 
-        var item = this.db.addItem(args.id, args.item)
+        let item = this.db.addItem(args.id, args.item)
 
         if (item) {
             user.send('error', {
@@ -175,13 +175,13 @@ export default class Panel extends Plugin {
         let recipientRank = await this.getRecipientRank(recipient, args.id)
 
         if (recipientRank < user.data.rank) {
-            this.db.ban(args.id, args.banDuration, user.data.id)
+            await this.db.ban(args.id, args.banDuration, user.data.id)
 
             if (recipient) {
                 recipient.close()
             }
 
-            let userName = await this.db.getUserById(args.id).username
+            let userName = await this.db.getUserById(args.id).data.username
 
             user.send('error', {
                 error: 'Player banned until ' + args.banDuration + ' .'
@@ -206,9 +206,9 @@ export default class Panel extends Plugin {
 			return
         }
 
-        let userName = await this.db.getUserById(args.id).username
+        let userName = await this.db.getUserById(args.id).data.username
 
-        this.db.changeUsername(args.id, args.newUsername)
+        await this.db.changeUsername(args.id, args.newUsername)
 
         user.send('error', {
             error: 'Username changed sucessfully.'

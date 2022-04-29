@@ -276,7 +276,6 @@ export default class Database {
             where: {
                 username: {
                     [Op.like]: '%' + username + '%'
-
                 }
             }
         })

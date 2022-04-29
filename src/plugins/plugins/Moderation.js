@@ -25,7 +25,7 @@ export default class Moderation extends Plugin {
 
         if (recipient && recipient.data.rank < user.data.rank) {
             recipient.close()
-            this.discord.banLogs(moderator.data.username, recipient.data.username)
+            this.discord.kickLogs(user.data.username, recipient.data.username)
         }
     }
 

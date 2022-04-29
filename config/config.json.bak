@@ -1,0 +1,37 @@
+{
+    "crypto": {
+        "secret": "c193b0346e6d3e1732f5b892f4b5453c367b4f98ee8b62b75d294a86466f695e",
+        "rounds": 10,
+        "loginKeyExpiry": 300
+    },
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "GoodTimes321!",
+        "database": "yukon",
+        "dialect": "mysql",
+        "debug": false
+    },
+    "socketio": {
+        "https": true,
+        "ssl": {
+            "cert": "\Users\admin\Desktop\cpps\ssl\STAR_cpvanilla_net.crt",
+            "ca": "\Users\admin\Desktop\cpps\ssl\STAR_cpvanilla_net.ca-bundle",
+            "key": "\Users\admin\Desktop\cpps\ssl\STAR_cpvanilla_net.key"
+        }
+    },
+    "cors": {
+        "origin": "https://play.cpvanilla.net"
+    },
+    "worlds": {
+        "Login": {
+            "host": "play.cpvanilla.net",
+            "port": 6111
+        },
+        "Blizzard": {
+            "host": "play.cpvanilla.net",
+            "port": 6112,
+            "maxUsers": 300
+        }
+    }
+}

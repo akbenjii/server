@@ -1,0 +1,42 @@
+{
+    "crypto": {
+        "secret": "",
+        "rounds": 10,
+        "loginKeyExpiry": 300
+    },
+    "database": {
+        "host": "localhost",
+        "user": "user",
+        "password": "password",
+        "database": "yukon",
+        "dialect": "mysql",
+        "debug": false
+    },
+    "socketio": {
+        "https": false,
+        "ssl": {
+            "cert": "/path/to/cert.crt",
+            "ca": "/path/to/ca.ca-bundle",
+            "key": "/path/to/key.key"
+        }
+    },
+    "cors": {
+        "origin": "http://localhost:8080"
+    },
+    "worlds": {
+        "Login": {
+            "host": "localhost",
+            "port": 6111
+        },
+        "Blizzard": {
+            "host": "localhost",
+            "port": 6112,
+            "maxUsers": 300
+        }
+    },
+    "perspectiveapikey": "PERSPECTIVE_API_KEY",
+    "discordbottoken": "DISCORD_LOGGING_BOT_TOKEN",
+    "chatlogchannel": "CHAT_LOG_CHANNEL_ID",
+    "loginlogchannel": "LOGIN_LOG_CHANNEL_ID",
+    "botowner": "BOT_OWNER_ID"
+}

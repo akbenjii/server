@@ -1,0 +1,52 @@
+{
+  "name": "cpvanilla-server",
+  "version": "1.0.7-beta",
+  "description": "A server for https://github.com/dirkdog/cpv/",
+  "scripts": {
+    "dev": "babel-watch ./src/World.js Login Blizzard",
+    "build": "babel src -d dist --copy-files",
+    "start": "pm2 start ecosystem.config.js",
+    "stop": "pm2 stop ecosystem.config.js",
+    "restart": "pm2 restart ecosystem.config.js",
+    "list": "pm2 list",
+    "logs": "pm2 logs",
+    "monit": "pm2 monit",
+    "secret-gen": "node ./utils/secret-gen.js",
+    "table-to-json": "babel-node ./utils/table-to-json.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dirkdog/cpv.git"
+  },
+  "author": "DirkD",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dirkdog/cpv/issues"
+  },
+  "homepage": "https://cpvanilla.net",
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-watch": "^7.7.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "fastest-validator": "^1.9.0",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "pm2": "^5.1.2",
+    "profane-words": "^1.4.0",
+    "rate-limiter-flexible": "^2.2.1",
+    "sequelize": "^5.22.3",
+    "socket.io": "^4.4.1",
+    "uuid": "^8.3.2"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.6",
+    "utf-8-validate": "^5.0.8"
+  },
+  "type": "module"
+}

@@ -1,7 +1,7 @@
 {
-  "name": "cpvanilla-server",
-  "version": "1.0.7-beta",
-  "description": "A server for https://github.com/dirkdog/cpv/",
+  "name": "cpforever-server",
+  "version": "0.1.0-beta",
+  "description": "A server for https://github.com/cpforever/client/",
   "scripts": {
     "dev": "babel-watch ./src/World.js Login Blizzard",
     "build": "babel src -d dist --copy-files",
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dirkdog/cpv.git"
+    "url": "git+https://github.com/cpforever/server.git"
   },
-  "author": "DirkD",
+  "author": "sahmyool, DirkD",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dirkdog/cpv/issues"
+    "url": "https://github.com/cpforever/server/issues"
   },
-  "homepage": "https://cpvanilla.net",
+  "homepage": "https://cpforever.net",
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",

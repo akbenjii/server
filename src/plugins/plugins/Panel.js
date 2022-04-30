@@ -208,13 +208,15 @@ export default class Panel extends Plugin {
 
         let userName = await this.db.getUserById(args.id).data.username
 
-        await this.db.changeUsername(args.id, args.newUsername)
+        let complete = await this.db.changeUsername(args.id, args.newUsername)
 
-        user.send('error', {
-            error: 'Username changed sucessfully.'
-        })
+        if (complete) {
+            user.send('error', {
+                error: 'Username changed successfully.'
+            })
 
-        this.discord.changeUsernameLogs(user.data.username, userName, args.newUsername)
+            this.discord.changeUsernameLogs(user.data.username, userName, args.newUsername)
+        }
 
     }
 

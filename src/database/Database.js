@@ -344,6 +344,12 @@ export default class Database {
 
     async changeUsername(userId, newUsername) {
 
+        if (newUsername.length < 4) return false
+        if (newUsername.length > 16) return false
+
+        let existingUser = await this.getUserByUsername(newUsername)
+        if (existingUser) return false
+
         this.users.update({
             username: newUsername
         }, {
@@ -351,6 +357,22 @@ export default class Database {
                 id: userId
             }
         })
+
+        return true
+    }
+
+    async updatePassword(userId, password) {
+        if (password.length < 5) return false
+        if (password.length > 32) return false
+        let hash = await bcrypt.hash(password, 10)
+        this.users.update({
+            password: hash
+        }, {
+            where: {
+                id: userId
+            }
+        })
+        return true
     }
 
     async getPuffles(userId) {

@@ -1,5 +1,5 @@
 import SledInstance from '../instance/SledInstance'
-
+import FindFourInstance from '../instance/FindFourInstance'
 
 export default class WaddleRoom {
 
@@ -16,12 +16,16 @@ export default class WaddleRoom {
         user.waddle = this
 
         // Start game
-        if (!this.users.includes(null)) {
+        if (!this.users.includes(null) && this.game == 'sled') {
             return this.start()
         }
 
-        user.send('join_waddle', { waddle: this.id, seat: seat })
-        user.room.send(user, 'update_waddle', { waddle: this.id, seat: seat, username: user.data.username }, [])
+        user.send('join_waddle', { waddle: this.id, seat: seat, game: this.game })
+        user.room.send(user, 'update_waddle', { waddle: this.id, seat: seat, username: user.data.username, game: this.game }, [])
+
+        if (!this.users.includes(null)) {
+            this.start()
+        }
     }
 
     remove(user) {
@@ -34,9 +38,11 @@ export default class WaddleRoom {
     }
 
     start() {
-        let instance = new SledInstance(this)
+        let instance
+        if (this.game == 'sled') instance = new SledInstance(this)
+        if (this.game == 'four') instance = new FindFourInstance(this)
 
-        this.reset()
+        if (this.game !== 'four') this.reset()
         instance.init()
     }
 

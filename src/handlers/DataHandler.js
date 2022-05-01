@@ -118,4 +118,9 @@ export default class DataHandler {
         this.db.worlds.update({ population: this.population }, { where: { id: this.id }})
     }
 
+    broadcast(message) {
+        for (let user of Object.values(this.users)) {
+            user.send('error', { error: message })
+        }
+    }
 }

@@ -14,7 +14,8 @@ export default class Chat extends Plugin {
 
         this.commands = {
             'ai': this.addItem,
-            'users': this.userPopulation
+            'users': this.userPopulation,
+            'broadcast': this.broadcast,
         }
 
         this.bindCommands()
@@ -132,6 +133,11 @@ export default class Chat extends Plugin {
         user.send('error', {
             error: `Users online: ${this.handler.population}`
         })
+    }
+
+    broadcast(args, user) {
+        if (user.data.rank < 5) return
+        this.handler.broadcast(args[0])
     }
 
 }

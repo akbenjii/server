@@ -100,37 +100,8 @@ export default class Database {
     }
 
     async getActiveBan(userId) {
-
-        let user = await this.findOne('users', {
-            where: { id: userId }
-        })
-
-        let usersOnIp = await this.findAll('users', {
-            where: { ip: user.dataValues.ip }
-        })
-
-        if (!user.dataValues.ip) usersOnIp = null
-
-        this.activeBansOnIp = []
-        this.longestBan = {}
-        this.longestBan.dataValues = {}
-        this.longestBan.dataValues.expires = 0
-
-        for (var x in usersOnIp) {
-
-            var ban = await this.findOne('bans', {
-                where: {
-                    userId: usersOnIp[x].dataValues.id,
-                    expires: {
-                        [Op.gt]: Date.now()
-                    }
-                }
-            })
-
-            if (ban) this.activeBansOnIp.push(ban)
-        }
-
-        var ban = await this.findOne('bans', {
+        var longestBan;
+        let bans = await this.findAll('bans', {
             where: {
                 userId: userId,
                 expires: {
@@ -138,18 +109,12 @@ export default class Database {
                 }
             }
         })
-        if (ban) this.activeBansOnIp.push(ban)
-
-        for (var x in this.activeBansOnIp) {
-            var expirationDate = Date.parse(this.activeBansOnIp[x].dataValues.expires)
-            var longestExpirationDate = Date.parse(this.longestBan.dataValues.expires)
-
-            if (expirationDate > longestExpirationDate) this.longestBan = this.activeBansOnIp[x]
+        for (let x in bans) {
+            if (!longestBan || bans[x].expires > longestBan.expires) {
+                longestBan = bans[x]
+            }
         }
-
-        if (this.longestBan.dataValues.expires == 0) return
-
-        return this.longestBan
+        return longestBan
     }
 
     async getBanCount(userId) {

@@ -8,7 +8,8 @@ export default class Moderation extends Plugin {
         this.events = {
             'mute_player': this.mutePlayer,
             'kick_player': this.kickPlayer,
-            'ban_player': this.banPlayer
+            'ban_player': this.banPlayer,
+            'stealth_mode': this.stealthMode,
         }
     }
 
@@ -27,6 +28,19 @@ export default class Moderation extends Plugin {
             recipient.close()
             this.discord.kickLogs(user.data.username, recipient.data.username)
         }
+    }
+
+    stealthMode(args, user) {
+        if (!user.isModerator) {
+            return
+        }
+
+        this.db.users.update({ stealthMode: (args.stealthMode) ? 0 : 1 }, { where: { id: user.data.id } })
+
+        let string = args.stealthMode ? 'disabled' : 'enabled'
+        user.send('error', {
+            error: `Stealth mode ${string}\nPlease relogin.`
+        })()
     }
 
     async banPlayer(args, user) {
@@ -57,7 +71,7 @@ export default class Moderation extends Plugin {
 
         this.db.bans.create({ userId: id, expires: expires, moderatorId: moderator.data.id, message: message })
 
-        let userName = await this.db.getUserById(id).username
+        let userName = (await this.db.getUserById(id)).username
 
         this.discord.banLogs(moderator.data.username, userName, expires)
     }

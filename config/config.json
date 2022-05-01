@@ -5,11 +5,13 @@
         "loginKeyExpiry": 300
     },
     "database": {
-        "host": "localhost",
-        "user": "root",
-        "database": "yukon",
+        "host": "144.126.158.71",
+        "user": "admin",
+        "password": "GJc>za9j+_y~2T?$7DfcjAF,FZaFmu",
+        "database": "cpforever",
         "dialect": "mysql",
-        "debug": false
+        "debug": true
+
     },
     "socketio": {
         "https": false,
@@ -40,5 +42,6 @@
     "discordbottoken": "OTY5NjMwMTM4NjIwODQ2MTUy.YmwMbw.XAgDL7Z8yzoWlb-wK4y0yCiJNFA",
     "chatlogchannel": "969631117642698872",
     "loginlogchannel": "969631284294991882",
+    "modlogchannel": "970279187707465759",
     "botowner": "967464052961976350"
 }

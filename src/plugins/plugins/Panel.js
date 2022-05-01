@@ -129,7 +129,7 @@ export default class Panel extends Plugin {
 			return
 		}
 
-        let userName = await this.db.getUserById(args.id).data.username
+        let userName = (await this.db.getUserById(args.id)).username
 
         await this.db.addCoins(args.id, args.coins)
 
@@ -149,7 +149,7 @@ export default class Panel extends Plugin {
 			return
         }
 
-        let userName = await this.db.getUserById(args.id).data.username
+        let userName = (await this.db.getUserById(args.id)).username
 
         let item = this.db.addItem(args.id, args.item)
 
@@ -158,36 +158,37 @@ export default class Panel extends Plugin {
                 error: 'Item added successfully.'
             })
 
-            this.discord.addItemLogs(user.data.username, userName, args.item)
+            this.discord.addItemLogs(user.data.username, userName, args.itemName)
         }
     }
 
     async banUser(args, user) {
-
         if (user.data.rank < 4) {
             user.send('error', {
                 error: 'You do not have permission to perform this action.'
             })
 			return
         }
-
         let recipient = this.usersById[args.id]
         let recipientRank = await this.getRecipientRank(recipient, args.id)
 
         if (recipientRank < user.data.rank) {
-            await this.db.ban(args.id, args.banDuration, user.data.id)
+            let date = new Date()
+            let expiry = date.getTime() + args.banDuration
+            await this.db.ban(args.id, expiry, user.data.id)
 
             if (recipient) {
                 recipient.close()
             }
 
-            let userName = await this.db.getUserById(args.id).data.username
+            let userName = (await this.db.getUserById(args.id)).username
+            let expiryDate = new Date(expiry)
 
             user.send('error', {
-                error: 'Player banned until ' + args.banDuration + ' .'
+                error: 'Player banned until ' + expiryDate.toUTCString()
             })
 
-            this.discord.banLogs(user.data.username, userName, args.banDuration)
+            this.discord.banLogs(user.data.username, userName, args.durationText, expiryDate.toUTCString())
         }
 
         else {
@@ -206,7 +207,7 @@ export default class Panel extends Plugin {
 			return
         }
 
-        let userName = await this.db.getUserById(args.id).data.username
+        let userName = (await this.db.getUserById(args.id)).username
 
         let complete = await this.db.changeUsername(args.id, args.newUsername)
 

@@ -127,7 +127,7 @@ class Panel extends _Plugin.default {
       return;
     }
 
-    let userName = await this.db.getUserById(args.id).data.username;
+    let userName = (await this.db.getUserById(args.id)).username;
     await this.db.addCoins(args.id, args.coins);
     user.send('error', {
       error: 'Coins added successfully.'
@@ -143,14 +143,14 @@ class Panel extends _Plugin.default {
       return;
     }
 
-    let userName = await this.db.getUserById(args.id).data.username;
+    let userName = (await this.db.getUserById(args.id)).username;
     let item = this.db.addItem(args.id, args.item);
 
     if (item) {
       user.send('error', {
         error: 'Item added successfully.'
       });
-      this.discord.addItemLogs(user.data.username, userName, args.item);
+      this.discord.addItemLogs(user.data.username, userName, args.itemName);
     }
   }
 
@@ -166,17 +166,20 @@ class Panel extends _Plugin.default {
     let recipientRank = await this.getRecipientRank(recipient, args.id);
 
     if (recipientRank < user.data.rank) {
-      await this.db.ban(args.id, args.banDuration, user.data.id);
+      let date = new Date();
+      let expiry = date.getTime() + args.banDuration;
+      await this.db.ban(args.id, expiry, user.data.id);
 
       if (recipient) {
         recipient.close();
       }
 
-      let userName = await this.db.getUserById(args.id).data.username;
+      let userName = (await this.db.getUserById(args.id)).username;
+      let expiryDate = new Date(expiry);
       user.send('error', {
-        error: 'Player banned until ' + args.banDuration + ' .'
+        error: 'Player banned until ' + expiryDate.toUTCString()
       });
-      this.discord.banLogs(user.data.username, userName, args.banDuration);
+      this.discord.banLogs(user.data.username, userName, args.durationText, expiryDate.toUTCString());
     } else {
       user.send('error', {
         error: 'This user has the same permission level as you.'
@@ -192,7 +195,7 @@ class Panel extends _Plugin.default {
       return;
     }
 
-    let userName = await this.db.getUserById(args.id).data.username;
+    let userName = (await this.db.getUserById(args.id)).username;
     let complete = await this.db.changeUsername(args.id, args.newUsername);
 
     if (complete) {

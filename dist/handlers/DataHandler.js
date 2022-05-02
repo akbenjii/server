@@ -124,6 +124,14 @@ class DataHandler {
     });
   }
 
+  broadcast(message) {
+    for (let user of Object.values(this.users)) {
+      user.send('error', {
+        error: message
+      });
+    }
+  }
+
 }
 
 exports.default = DataHandler;

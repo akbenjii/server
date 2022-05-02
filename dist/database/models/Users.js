@@ -34,6 +34,10 @@ class Users extends _sequelize.default.Model {
         type: DataTypes.INTEGER(1),
         allowNull: false
       },
+      stealthMode: {
+        type: DataTypes.INTEGER(1),
+        allowNull: false
+      },
       permaBan: {
         type: DataTypes.BOOLEAN,
         allowNull: false

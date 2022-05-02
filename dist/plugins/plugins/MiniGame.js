@@ -16,7 +16,8 @@ class MiniGame extends _Plugin.default {
       'start_game': this.startGame,
       'send_move': this.sendMove,
       'game_over': this.gameOver,
-      'end_ruffle_mingame': this.endRuffleMinigame
+      'end_ruffle_mingame': this.endRuffleMinigame,
+      'place_counter': this.placeCounter
     };
     this.defaultScoreGames = [904, 905, 906, 912, 916, 917, 918, 919, 950, 952];
   }
@@ -65,6 +66,12 @@ class MiniGame extends _Plugin.default {
       return score;
     } else {
       return Math.ceil(score / 10);
+    }
+  }
+
+  placeCounter(args, user) {
+    if (user.waddle.game = 'four') {
+      user.waddle.placeCounter(args, user);
     }
   }
 

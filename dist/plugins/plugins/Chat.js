@@ -21,7 +21,8 @@ class Chat extends _Plugin.default {
     };
     this.commands = {
       'ai': this.addItem,
-      'users': this.userPopulation
+      'users': this.userPopulation,
+      'broadcast': this.broadcast
     };
     this.bindCommands();
     this.perspective = new _perspectiveApiClient.default({
@@ -133,6 +134,11 @@ class Chat extends _Plugin.default {
     user.send('error', {
       error: `Users online: ${this.handler.population}`
     });
+  }
+
+  broadcast(args, user) {
+    if (user.data.rank < 5) return;
+    this.handler.broadcast(args[0]);
   }
 
 }

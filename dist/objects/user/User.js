@@ -58,6 +58,7 @@ class User {
       y: this.y,
       frame: this.frame,
       rank: this.data.rank,
+      stealthMode: this.data.stealthMode,
       username_approved: this.data.username_approved
     };
   }

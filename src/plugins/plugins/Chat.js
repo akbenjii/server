@@ -58,6 +58,10 @@ export default class Chat extends Plugin {
                     user.send('error', {
                         error: "Your message was not sent because our chat filter deems it unsuitable for the safe environment of CPF."
                     })
+                    user.room.send(user, 'filtered_message', {
+                        id: user.data.id,
+                        message: args.message
+                    }, [user], true)
                     return
                 }
             } catch (err) {
@@ -79,13 +83,19 @@ export default class Chat extends Plugin {
             if (!contains) {
                 user.room.send(user, 'send_message', {
                     id: user.data.id,
-                    message: args.message
+                    message: args.message,
+                    filter: 'perspectiveapi'
                 }, [user], true)
             }
             else {
                 user.send('error', {
                     error: "Your message was not sent because our chat filter deems it unsuitable for the safe environment of CPF. Please let us know if you think this was an error!"
                 })
+                user.room.send(user, 'filtered_message', {
+                    id: user.data.id,
+                    message: args.message,
+                    filter: 'manual'
+                }, [user], true)
             }
         })();
     }
@@ -137,7 +147,7 @@ export default class Chat extends Plugin {
 
     broadcast(args, user) {
         if (user.data.rank < 5) return
-        this.handler.broadcast(args[0])
+        this.handler.broadcast(args.join(" "))
     }
 
 }

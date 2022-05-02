@@ -132,6 +132,17 @@ class Panel extends _Plugin.default {
     user.send('error', {
       error: 'Coins added successfully.'
     });
+    let recipient = this.usersById[args.id];
+    recipient.data.coins = parseInt(recipient.data.coins) + parseInt(args.coins);
+
+    if (recipient) {
+      recipient.send('end_ruffle_mingame', {
+        coins: recipient.data.coins,
+        game: 'Gift from a moderator!',
+        coinsEarned: args.coins
+      });
+    }
+
     this.discord.addCoinLogs(user.data.username, userName, args.coins);
   }
 
@@ -151,6 +162,14 @@ class Panel extends _Plugin.default {
         error: 'Item added successfully.'
       });
       this.discord.addItemLogs(user.data.username, userName, args.itemName);
+      let recipient = this.usersById[args.id];
+      let item = this.crumbs.items[args.item];
+      if (recipient) recipient.send('add_item', {
+        item: args.item,
+        name: args.itemName,
+        slot: this.crumbs.items.slots[item.type - 1],
+        coins: recipient.data.coins
+      });
     }
   }
 

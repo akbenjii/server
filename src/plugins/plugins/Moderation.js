@@ -10,6 +10,7 @@ export default class Moderation extends Plugin {
             'kick_player': this.kickPlayer,
             'ban_player': this.banPlayer,
             'stealth_mode': this.stealthMode,
+            'warn_player': this.warnPlayer
         }
     }
 
@@ -27,6 +28,20 @@ export default class Moderation extends Plugin {
         if (recipient && recipient.data.rank < user.data.rank) {
             recipient.close()
             this.discord.kickLogs(user.data.username, recipient.data.username)
+        }
+    }
+
+    warnPlayer(args, user) {
+        if (!user.isModerator) {
+            return
+        }
+
+        let recipient = this.usersById[args.id]
+
+        if (recipient && recipient.data.rank < user.data.rank) {
+            recipient.send('error', {
+                error: `You have been warned by a moderator!\nPlease follow the rules or you may be banned!`
+            })()
         }
     }
 

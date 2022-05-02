@@ -9,7 +9,7 @@ var _Plugin = _interopRequireDefault(require("../Plugin"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-class Chat extends _Plugin.default {
+class Item extends _Plugin.default {
   constructor(users, rooms) {
     super(users, rooms);
     this.events = {
@@ -60,4 +60,4 @@ class Chat extends _Plugin.default {
 
 }
 
-exports.default = Chat;
+exports.default = Item;

@@ -38,6 +38,18 @@ export default class Items extends Sequelize.Model {
                 treasure: {
                     type: DataTypes.BOOLEAN,
                     allowNull: false
+                },
+                obtainable: {
+                    type: DataTypes.BOOLEAN,
+                    allowNull: false
+                },
+                firstRelease: {
+                    type: Sequelize.DATE,
+                    allowNull: true
+                },
+                latestRelease: {
+                    type: Sequelize.DATE,
+                    allowNull: true
                 }
             },
             { sequelize, timestamps: false, tableName: 'items' }

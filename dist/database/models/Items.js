@@ -44,6 +44,18 @@ class Items extends _sequelize.default.Model {
       treasure: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+      },
+      obtainable: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
+      firstRelease: {
+        type: _sequelize.default.DATE,
+        allowNull: true
+      },
+      latestRelease: {
+        type: _sequelize.default.DATE,
+        allowNull: true
       }
     }, {
       sequelize,

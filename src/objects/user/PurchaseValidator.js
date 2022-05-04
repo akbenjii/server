@@ -35,7 +35,7 @@ export default class PurchaseValidator {
             this.user.send('error', { error: 'You already have this item.' })
             return false
 
-        } else if (item.patched) {
+        } else if (item.patched || !item.obtainable) {
             this.user.send('error', { error: 'This item is not currently available.' })
             return false
 

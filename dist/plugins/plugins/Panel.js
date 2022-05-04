@@ -155,21 +155,29 @@ class Panel extends _Plugin.default {
     }
 
     let userName = (await this.db.getUserById(args.id)).username;
-    let item = this.db.addItem(args.id, args.item);
+    this.discord.addItemLogs(user.data.username, userName, args.itemName);
+    let recipient = this.usersById[args.id];
 
-    if (item) {
-      user.send('error', {
-        error: 'Item added successfully.'
-      });
-      this.discord.addItemLogs(user.data.username, userName, args.itemName);
-      let recipient = this.usersById[args.id];
+    if (recipient) {
       let item = this.crumbs.items[args.item];
-      if (recipient) recipient.send('add_item', {
+      recipient.inventory.add(args.item);
+      recipient.send('add_item', {
         item: args.item,
         name: args.itemName,
         slot: this.crumbs.items.slots[item.type - 1],
         coins: recipient.data.coins
       });
+      user.send('error', {
+        error: 'Item added successfully.'
+      });
+    } else {
+      let item = this.db.addItem(args.id, args.item);
+
+      if (item) {
+        user.send('error', {
+          error: 'Item added successfully.'
+        });
+      }
     }
   }
 

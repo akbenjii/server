@@ -114,7 +114,7 @@ export default class GameAuth extends Plugin {
         let validator = password
         let validatorHash = await bcrypt.hash(validator, this.config.crypto.rounds)
 
-        user.token.selector = validatorHash
+        user.token.selector = selector
         user.token.validatorHash = validatorHash
 
         return `${selector}:${validator}`

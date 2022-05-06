@@ -45,7 +45,7 @@ export default class Panel extends Plugin {
 			return
         }
 
-        this.db.users.update({
+        await this.db.users.update({
             username_approved: 1,
             username_rejected: 0
         }, {
@@ -53,6 +53,8 @@ export default class Panel extends Plugin {
                 id: args.id
             }
         })
+
+        this.getUnverifedUsers(args, user)
     }
 
     async rejectUser(args, user) {
@@ -64,7 +66,7 @@ export default class Panel extends Plugin {
 			return
         }
 
-        this.db.users.update({
+        await this.db.users.update({
             username_rejected: 1,
             username_approved: 0
         }, {
@@ -72,6 +74,8 @@ export default class Panel extends Plugin {
                 id: args.id
             }
         })
+
+        this.getUnverifedUsers(args, user)
     }
 
     async getUserInfo(args, user) {

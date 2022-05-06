@@ -42,7 +42,12 @@ class PurchaseValidator {
         error: 'You already have this item.'
       });
       return false;
-    } else if (item.patched || !item.obtainable) {
+    } else if (item.patched) {
+      this.user.send('error', {
+        error: 'This item is not currently available.'
+      });
+      return false;
+    } else if (type == 'items' && !item.obtainable) {
       this.user.send('error', {
         error: 'This item is not currently available.'
       });

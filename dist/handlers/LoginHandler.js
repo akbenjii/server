@@ -51,7 +51,7 @@ class LoginHandler {
         min: 3,
         max: 12,
         messages: {
-          stringEmpty: 'You must provide your Penguin Name to enter Club Penguin',
+          stringEmpty: 'You must provide your Penguin Name to enter CPForever',
           stringMin: 'Your Penguin Name is too short. Please try again',
           stringMax: 'Your Penguin Name is too long. Please try again'
         }
@@ -63,7 +63,7 @@ class LoginHandler {
         min: 3,
         max: 128,
         messages: {
-          stringEmpty: 'You must provide your password to enter Club Penguin',
+          stringEmpty: 'You must provide your password to enter CPForever',
           stringMin: 'Your password is too short. Please try again',
           stringMax: 'Your password is too long. Please try again'
         }

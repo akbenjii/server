@@ -7,7 +7,8 @@ export default class Get extends Plugin {
         super(users, rooms)
         this.events = {
             'get_player': this.getPlayer,
-            'get_rank': this.getRank
+            'get_rank': this.getRank,
+            'get_pin': this.getPin
         }
     }
 
@@ -45,6 +46,15 @@ export default class Get extends Plugin {
         if (userData) {
             user.send('get_rank', { rank: rank })
         }
+    }
+
+    getPin(args, user) {
+        user.send('get_pin', {
+            id: null,
+            room: null,
+            x: null,
+            y: null
+        })
     }
 
 }

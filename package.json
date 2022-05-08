@@ -1,6 +1,6 @@
 {
   "name": "cpforever-server",
-  "version": "1.0.1-beta",
+  "version": "1.1.0-beta",
   "description": "A server for https://github.com/cpforever/client/",
   "scripts": {
     "dev": "babel-watch ./src/World.js Login Blizzard",
@@ -34,6 +34,7 @@
   "dependencies": {
     "badwords": "^1.0.0",
     "bcrypt": "^5.0.0",
+    "cryptojs": "^2.5.3",
     "discord.js": "^13.6.0",
     "fastest-validator": "^1.9.0",
     "fs": "0.0.1-security",

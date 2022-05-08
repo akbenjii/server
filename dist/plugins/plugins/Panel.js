@@ -50,7 +50,7 @@ class Panel extends _Plugin.default {
       return;
     }
 
-    this.db.users.update({
+    await this.db.users.update({
       username_approved: 1,
       username_rejected: 0
     }, {
@@ -58,6 +58,7 @@ class Panel extends _Plugin.default {
         id: args.id
       }
     });
+    this.getUnverifedUsers(args, user);
   }
 
   async rejectUser(args, user) {
@@ -68,7 +69,7 @@ class Panel extends _Plugin.default {
       return;
     }
 
-    this.db.users.update({
+    await this.db.users.update({
       username_rejected: 1,
       username_approved: 0
     }, {
@@ -76,6 +77,7 @@ class Panel extends _Plugin.default {
         id: args.id
       }
     });
+    this.getUnverifedUsers(args, user);
   }
 
   async getUserInfo(args, user) {

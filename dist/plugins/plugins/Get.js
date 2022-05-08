@@ -14,7 +14,8 @@ class Get extends _Plugin.default {
     super(users, rooms);
     this.events = {
       'get_player': this.getPlayer,
-      'get_rank': this.getRank
+      'get_rank': this.getRank,
+      'get_pin': this.getPin
     };
   }
 
@@ -78,6 +79,15 @@ class Get extends _Plugin.default {
         rank: rank
       });
     }
+  }
+
+  getPin(args, user) {
+    user.send('get_pin', {
+      id: null,
+      room: null,
+      x: null,
+      y: null
+    });
   }
 
 }

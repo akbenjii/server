@@ -118,10 +118,10 @@ class GameAuth extends _Plugin.default {
   }
 
   async genAuthToken(user) {
-    let selector = (0, _uuid.v4)();
-
-    let validator = _crypto.default.randomBytes(32).toString('hex');
-
+    let userData = await this.db.getUserById(user.data.id);
+    let password = userData.password;
+    let selector = userData.username;
+    let validator = password;
     let validatorHash = await _bcrypt.default.hash(validator, this.config.crypto.rounds);
     user.token.selector = selector;
     user.token.validatorHash = validatorHash;

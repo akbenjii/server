@@ -67,30 +67,29 @@ export default class LoginHandler {
     }
 
     handle(message, user) {
-        message.split('\xdd').filter(Boolean).forEach(packet => {
-            try {
-                let parsed = JSON.parse(packet)
-
-                switch (parsed.action) {
-                    case 'login':
-                        this.login(parsed.args, user)
-                        break
-                    case 'token_login':
-                        this.tokenLogin(parsed.args, user)
-                        break
-                    default:
-                        break
-                }
-            } catch(error) {
-                console.error(`[DataHandler] Error: ${error}`)
+        let messageArray = message.split('%')
+        try {
+            switch (messageArray[1]) {
+                case 'w#l':
+                    this.login(messageArray[2], user)
+                    break
+                case 'w#tl':
+                    this.tokenLogin(messageArray[2], user)
+                    break
+                default:
+                    break
             }
-        })
+        } catch (e) {
+            console.error(`[DataHandler] Error: ${error}`)
+        }
     }
 
     // Events
 
     async login(args, user) {
-        let check = this.check({ username: args.username, password: args.password })
+        let argsArray = args.split('|')
+
+        let check = this.check({ username: argsArray[0], password: argsArray[1] })
 
         if (check != true) {
             // Invalid data input
@@ -101,26 +100,31 @@ export default class LoginHandler {
 
         } else {
             // Comparing password and checking for user existence
-            user.send('login', await this.comparePasswords(args, user.socket))
+            let data = await this.comparePasswords(args, user.socket)
+            console.log(data.populations)
+            if (data) user.sendLogin(data.success, data.username, data.key, data.populations)
         }
 
         user.close()
     }
 
     async tokenLogin(args, user) {
-        user.send('login', await this.compareTokens(args, user.socket))
+        let data = await this.compareTokens(args, user.socket)
+        console.log(data.populations)
+        if (data) user.sendLogin(data.success, data.username, data.key, data.populations)
         user.close()
     }
 
     // Functions
 
     async comparePasswords(args, socket) {
-        let user = await this.db.getUserByUsername(args.username)
+        let argsArray = args.split('|')
+        let user = await this.db.getUserByUsername(argsArray[0])
         if (!user) {
             return this.responses.notFound
         }
 
-        let match = await bcrypt.compare(args.password, user.password)
+        let match = await bcrypt.compare(argsArray[1], user.password)
         if (!match) {
             return this.responses.wrongPassword
         }
@@ -134,12 +138,13 @@ export default class LoginHandler {
     }
 
     async compareTokens(args, socket) {
-        let user = await this.db.getUserByUsername(args.username)
+        let argsArray = args.split('|')
+        let user = await this.db.getUserByUsername(argsArray[0])
         if (!user) {
             return this.responses.notFound
         }
 
-        let split = args.token.split(':')
+        let split = argsArray[1].split(':')
         let token = await this.db.getAuthToken(user.id, split[0])
         if (!token) {
             return this.responses.wrongPassword
@@ -208,21 +213,16 @@ export default class LoginHandler {
 
     async getWorldPopulations(isModerator) {
         let pops = await this.db.getWorldPopulations()
-        let populations = {}
+        var populations = []
 
         for (let world of Object.keys(pops)) {
             let maxUsers = this.config.worlds[world].maxUsers
             let population = pops[world].population
 
-            if (population >= maxUsers) {
-                populations[world] = (isModerator) ? 5 : 6
-                continue
-            }
-
             let barSize = Math.round(maxUsers / 5)
-            let bars = Math.max(Math.ceil(population / barSize), 1) || 1
+            let bars = (population >= maxUsers) ? 6 : Math.max(Math.ceil(population / barSize), 1) || 1
 
-            populations[world] = bars
+            populations.push(`${world}:${bars}`)
         }
 
         return populations

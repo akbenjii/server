@@ -11,19 +11,20 @@ export default class GameAuth extends Plugin {
     constructor(users, rooms) {
         super(users, rooms)
         this.events = {
-            'game_auth': this.gameAuth
+            'w#ga': this.gameAuth
         }
     }
 
     // Events
 
     async gameAuth(args, user) {
+        let argsArray = args.split('|')
         // Already authenticated
         if (user.authenticated) {
             return
         }
 
-        let userData = await user.db.getUserByUsername(args.username)
+        let userData = await user.db.getUserByUsername(argsArray[0])
         if (!userData) {
             return user.close()
         }
@@ -47,6 +48,7 @@ export default class GameAuth extends Plugin {
     // Functions
 
     async compareLoginKey(args, user) {
+        let argsArray = args.split('|')
         let decoded
         let token
 
@@ -60,7 +62,7 @@ export default class GameAuth extends Plugin {
         // Verify hash
         let address = user.socket.handshake.address
         let userAgent = user.socket.request.headers['user-agent']
-        let match = await bcrypt.compare(`${user.data.username}${args.key}${address}${userAgent}`, decoded.hash)
+        let match = await bcrypt.compare(`${user.data.username}${argsArray[1]}${address}${userAgent}`, decoded.hash)
 
         if (!match) {
             return user.close()
@@ -70,12 +72,12 @@ export default class GameAuth extends Plugin {
         user.update({ loginKey: null })
 
         // Set selector for token destruction
-        if (args.token) {
-            user.token.oldSelector = args.token
+        if (argsArray[2]) {
+            user.token.oldSelector = argsArray[2]
         }
 
         // Create new token
-        if (args.createToken) {
+        if (argsArray[2]) {
             token = await this.genAuthToken(user)
         }
 
@@ -97,9 +99,9 @@ export default class GameAuth extends Plugin {
         user.authenticated = true
 
         // Send response
-        user.send('game_auth', { success: true })
+        user.sendGameAuth(true)
         if (token) {
-            user.send('auth_token', { token: token })
+            user.sendAuthToken(token)
         }
 
         // Update world population

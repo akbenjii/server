@@ -7,7 +7,7 @@ export default class Join extends Plugin {
     constructor(users, rooms) {
         super(users, rooms)
         this.events = {
-            'load_player': this.loadPlayer,
+            'p#lp': this.loadPlayer,
             'join_server': this.joinServer,
             'join_room': this.joinRoom,
             'join_igloo': this.joinIgloo
@@ -19,18 +19,7 @@ export default class Join extends Plugin {
     loadPlayer(args, user) {
         user.room = this.getRandomSpawn()
 
-        user.send('load_player', {
-            user: user.string,
-            room: user.room.id,
-
-            joinTime: user.data.joinTime,
-
-            buddies: user.buddy.list,
-            ignores: user.ignore.list,
-            inventory: user.inventory.list,
-            igloos: user.iglooInventory.list,
-            furniture: user.furnitureInventory.list
-        })
+        user.sendLoadPlayer(user.string, user.room.id, user.data.joinTime, user.buddy.list, user.ignore.list, user.inventory.list, user.iglooInventory.list, user.furnitureInventory.list)
     }
 
     joinServer(args, user) {

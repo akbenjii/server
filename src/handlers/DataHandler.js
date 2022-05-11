@@ -58,22 +58,21 @@ export default class DataHandler {
     }
 
     handle(message, user) {
-        message.split('\xdd').filter(Boolean).forEach(packet => {
-            try {
-                let parsed = JSON.parse(packet)
-                console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`)
+        let messageArray = message.split('%')
+        try {
+            if (user.data) console.log(`[DataHandler] Received: ${message} from ${user.data.username}`)
+            if (!user.data) console.log(`[DataHandler] Received: ${message}`)
 
-                // Only allow game_auth until user is authenticated
-                if (!user.authenticated && parsed.action != 'game_auth') {
-                    return user.close()
-                }
-
-                this.fireEvent(parsed.action, parsed.args, user)
-
-            } catch(error) {
-                console.error(`[DataHandler] Error: ${error}`)
+            // Only allow game_auth until user is authenticated
+            if (!user.authenticated && messageArray[1] != 'w#ga') {
+                return user.close()
             }
-        })
+
+            this.fireEvent(messageArray[1], messageArray[2], user)
+
+        } catch (e) {
+            console.error(`[DataHandler] Error: ${e}`)
+        }
     }
 
     fireEvent(event, args, user) {

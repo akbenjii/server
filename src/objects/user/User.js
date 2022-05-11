@@ -131,6 +131,22 @@ export default class User {
         this.socket.emit('message', JSON.stringify({ action: action, args: args }))
     }
 
+    sendGameAuth(success) {
+        this.socket.emit('message', `w#ga%${success}`)
+    }
+
+    sendAuthToken(token) {
+        this.socket.emit('message', `p#at%${token}`)
+    }
+
+    sendLogin(success, username, randomKey, populations) {
+        this.socket.emit('message', `w#l%${success}|${username}|${randomKey}|${populations}`)
+    }
+
+    sendLoadPlayer(string, roomId, joinTime, buddies, ignores, inventory, iglooInventory, furnitureInventory) {
+        this.socket.emit('message', `w#lp%${string}|${roomId}|${joinTime}|${buddies}|${ignores}|${inventory}|${iglooInventory}|${furnitureInventory}`)
+    }
+
     close() {
         this.socket.disconnect(true)
     }

@@ -35,6 +35,14 @@ class WaddleInstance {
 
   getPayout(user, score) {
     this.remove(user);
+
+    if (score === 0) {
+      user.data.sledRacesWon++;
+      user.update({
+        sledRacesWon: user.data.sledRacesWon
+      });
+    }
+
     return this.payouts[score] || this.minPayout;
   }
 

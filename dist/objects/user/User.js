@@ -185,7 +185,7 @@ class User {
   }
 
   onPacketSent() {
-    clearTimeout(this.closeInactive());
+    clearTimeout(this.closeInactive);
     this.closeInactive = setTimeout(() => {
       this.close();
     }, 600000);

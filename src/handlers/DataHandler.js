@@ -51,7 +51,7 @@ export default class DataHandler {
         let rooms = {}
 
         for (let data of roomsData) {
-            rooms[data.id] = new Room(data)
+            rooms[data.id] = new Room(data, this)
         }
 
         return rooms

@@ -339,6 +339,66 @@ class Database {
       attributes: ['food', 'play', 'rest', 'clean']
     });
   }
+
+  async getReleasedItems(user) {
+    let releasedItems = await this.findAll('items', {
+      where: {
+        latestRelease: {
+          [Op.gt]: new Date(user.data.joinTime)
+        }
+      }
+    });
+    let releasedItemIDs = [];
+
+    for (var x in releasedItems) {
+      releasedItemIDs.push(releasedItems[x].dataValues.id);
+    }
+
+    let obtainableItems = await this.findAll('items', {
+      where: {
+        obtainable: 1
+      }
+    });
+
+    for (var x in obtainableItems) {
+      if (!releasedItemIDs.includes(obtainableItems[x].dataValues.id)) {
+        releasedItemIDs.push(obtainableItems[x].dataValues.id);
+      }
+    }
+
+    return releasedItemIDs;
+  }
+
+  async getReleasedPins(user) {
+    let releasedPins = await this.findAll('items', {
+      where: {
+        latestRelease: {
+          [Op.gt]: user.data.joinTime
+        },
+        type: 8
+      }
+    });
+    let releasedPinIDs = [];
+
+    for (var x in releasedPins) {
+      releasedPinIDs.push(releasedPins[x].dataValues.id);
+    }
+
+    let obtainablePins = await this.findAll('items', {
+      where: {
+        obtainable: 1,
+        type: 8
+      }
+    });
+
+    for (var x in obtainablePins) {
+      if (!releasedPinIDs.includes(obtainablePins[x].dataValues.id)) {
+        releasedPinIDs.push(obtainablePins[x].dataValues.id);
+      }
+    }
+
+    return releasedPinIDs;
+  }
   /*========== Helper functions ==========*/
 
 

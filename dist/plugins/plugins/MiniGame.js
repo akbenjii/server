@@ -17,6 +17,7 @@ class MiniGame extends _Plugin.default {
       'send_move': this.sendMove,
       'game_over': this.gameOver,
       'end_ruffle_mingame': this.endRuffleMinigame,
+      'check_legit': this.checkLegit,
       'place_counter': this.placeCounter
     };
     this.defaultScoreGames = [904, 905, 906, 912, 916, 917, 918, 919, 950, 952];
@@ -33,11 +34,34 @@ class MiniGame extends _Plugin.default {
       return;
     } else {
       user.updateCoins(args.coins);
+      user.send('check_legit', {
+        game: args.game,
+        coinsEarned: args.coins
+      });
+      user.pending = true;
+      user.pendingCoins = args.coins;
+    }
+  }
+
+  checkLegit(args, user) {
+    let payoutFrequency = args.coins * 200;
+    let unixTime = new Date().getTime();
+
+    if (user.lastPayout > unixTime - payoutFrequency) {
+      return user.send('error', {
+        error: 'You have earned too many coins too quickly! These coins have not been added as we fear they may have been cheated.'
+      });
+    }
+
+    if (user.pending && user.pendingCoins === args.coins) {
       user.send('end_ruffle_mingame', {
         coins: user.data.coins,
         game: args.game,
         coinsEarned: args.coins
       });
+      user.pending = false;
+      user.pendingCoins = 0;
+      user.lastPayout = new Date().getTime();
     }
   }
 

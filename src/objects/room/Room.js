@@ -1,9 +1,11 @@
 export default class Room {
 
-    constructor(data) {
+    constructor(data, handler) {
         Object.assign(this, data)
 
         this.users = {}
+
+        this.handler = handler
 
         // Only used by rooms with waddles
         this.waddles = {}
@@ -22,6 +24,10 @@ export default class Room {
     }
 
     add(user) {
+        for (var x in this.users) {
+            if (!this.handler.usersById[this.users[x].id]) this.remove(user)
+        }
+
         if (this.users[user.socket.id]) this.remove(user)
 
         this.users[user.socket.id] = user

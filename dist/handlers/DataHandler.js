@@ -54,7 +54,7 @@ class DataHandler {
     let rooms = {};
 
     for (let data of roomsData) {
-      rooms[data.id] = new _Room.default(data);
+      rooms[data.id] = new _Room.default(data, this);
     }
 
     return rooms;

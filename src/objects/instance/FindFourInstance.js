@@ -88,8 +88,14 @@ export default class FindFourInstance extends WaddleInstance {
     }
 
     remove(user) {
-        let winner = (this.users[0].data.id === user.data.id) ? this.users[1].data.id : this.users[0].data.id
-        this.send('four_over', { winner: winner })
+        let winner = (this.users[0].data.id === user.data.id) ? this.users[1]: this.users[0]
+
+        winner.data.findFourWon++
+        winner.update({
+            findFourWon: winner.data.findFourWon
+        })
+
+        this.send('four_over', { winner: winner.data.id })
         for (let x in this.users) { this.waddle.remove(this.users[x]) }
     }
 

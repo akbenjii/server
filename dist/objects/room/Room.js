@@ -26,6 +26,7 @@ class Room {
   }
 
   add(user) {
+    if (this.users[user.socket.id]) this.remove(user);
     this.users[user.socket.id] = user;
 
     if (this.game) {

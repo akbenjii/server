@@ -45,6 +45,7 @@ class Actions extends _Plugin.default {
   }
 
   snowball(args, user) {
+    user.snowballsThrownThisSession++;
     user.room.send(user, 'snowball', {
       id: user.data.id,
       x: args.x,

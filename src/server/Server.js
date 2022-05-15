@@ -19,8 +19,8 @@ export default class Server {
         })
 
         this.rateLimiter = new RateLimiterFlexible.RateLimiterMemory({
-            // 20 events allowed per second
-            points: 20,
+            // 100 events allowed per second
+            points: 100,
             duration: 1
         })
 
@@ -64,6 +64,10 @@ export default class Server {
     }
 
     messageReceived(message, user) {
+        if (message.length > 1000) {
+            console.log(`[Server] Message from ${user.socket.id} is too long`)
+            return
+        }
         // Consume 1 point per event from IP address
         this.rateLimiter.consume(user.socket.handshake.address)
             .then(() => {

@@ -31,6 +31,9 @@ class User {
     this.x = 0;
     this.y = 0;
     this.frame = 1;
+    this.messagesSentThisSession = 0;
+    this.snowballsThrownThisSession = 0;
+    this.timePlayed = 0;
     this.buddy;
     this.ignore;
     this.inventory;
@@ -38,6 +41,9 @@ class User {
 
     this.authenticated = false;
     this.token = {};
+    setInterval(() => {
+      this.timePlayed++;
+    }, 1000);
   }
 
   get string() {
@@ -115,6 +121,18 @@ class User {
     this.update({
       coins: this.data.coins
     });
+
+    if (coins > 0) {
+      this.data.coinsEarned += coins;
+      this.update({
+        coinsEarned: this.data.coinsEarned
+      });
+    } else {
+      this.data.coinsSpent += coins;
+      this.update({
+        coinsSpent: this.data.coinsSpent
+      });
+    }
   }
 
   joinRoom(room, x = 0, y = 0) {
@@ -153,6 +171,24 @@ class User {
 
   close() {
     this.socket.disconnect(true);
+  }
+
+  updateStats() {
+    this.data.messagesSent += this.messagesSentThisSession;
+    this.data.snowballsThrown += this.snowballsThrownThisSession;
+    this.data.timePlayed += this.timePlayed;
+    this.update({
+      messagesSent: this.data.messagesSent,
+      snowballsThrown: this.data.snowballsThrown,
+      timePlayed: this.data.timePlayed
+    });
+  }
+
+  onPacketSent() {
+    clearTimeout(this.closeInactive());
+    this.closeInactive = setTimeout(() => {
+      this.close();
+    }, 600000);
   }
 
 }

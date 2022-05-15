@@ -92,7 +92,43 @@ export default class Users extends Sequelize.Model {
                 ip: {
                     type: DataTypes.TEXT,
                     allowNull: true
-                }
+                },
+                messagesSent: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                snowballsThrown: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                timePlayed: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                sledRacesWon: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                findFourWon: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                coinsEarned: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                coinsSpent: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                partyTasksCompleted: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
+                },
+                hasBeenPOTW: {
+                    type: DataTypes.INTEGER(1),
+                    allowNull: false
+                },
             },
             { sequelize, timestamps: false, tableName: 'users' }
         )

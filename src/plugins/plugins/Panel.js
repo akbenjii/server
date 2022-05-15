@@ -135,17 +135,19 @@ export default class Panel extends Plugin {
 
         let userName = (await this.db.getUserById(args.id)).username
 
-        await this.db.addCoins(args.id, args.coins)
-
         user.send('error', {
             error: 'Coins added successfully.'
         })
 
         let recipient = this.usersById[args.id]
-        recipient.data.coins = parseInt(recipient.data.coins) + parseInt(args.coins)
+
 
         if (recipient) {
+            await recipient.updateCoins(parseInt(args.coins))
             recipient.send('end_ruffle_mingame', { coins: recipient.data.coins, game: 'Gift from a moderator!', coinsEarned: args.coins })
+        }
+        else {
+            await this.db.addCoins(args.id, args.coins)
         }
 
         this.discord.addCoinLogs(user.data.username, userName, args.coins)

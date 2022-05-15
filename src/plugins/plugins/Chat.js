@@ -81,6 +81,7 @@ export default class Chat extends Plugin {
             });
 
             if (!contains) {
+                user.messagesSentThisSession++
                 user.room.send(user, 'send_message', {
                     id: user.data.id,
                     message: args.message,

@@ -24,8 +24,8 @@ class Server {
       path: '/'
     });
     this.rateLimiter = new _rateLimiterFlexible.default.RateLimiterMemory({
-      // 20 events allowed per second
-      points: 20,
+      // 100 events allowed per second
+      points: 100,
       duration: 1
     });
     this.server = io.listen(config.worlds[id].port);
@@ -63,7 +63,12 @@ class Server {
   }
 
   messageReceived(message, user) {
-    // Consume 1 point per event from IP address
+    if (message.length > 1000) {
+      console.log(`[Server] Message from ${user.socket.id} is too long`);
+      return;
+    } // Consume 1 point per event from IP address
+
+
     this.rateLimiter.consume(user.socket.handshake.address).then(() => {
       // Allowed
       this.handler.handle(message, user);

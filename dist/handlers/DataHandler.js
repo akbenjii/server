@@ -71,6 +71,7 @@ class DataHandler {
         }
 
         this.fireEvent(parsed.action, parsed.args, user);
+        user.onPacketSent();
       } catch (error) {
         console.error(`[DataHandler] Error: ${error}`);
       }
@@ -86,28 +87,31 @@ class DataHandler {
       return;
     }
 
-    if (user.room) {
-      user.room.remove(user);
-    }
+    user.updateStats();
+    setTimeout(() => {
+      if (user.room) {
+        user.room.remove(user);
+      }
 
-    if (user.buddy) {
-      user.buddy.sendOffline();
-    }
+      if (user.buddy) {
+        user.buddy.sendOffline();
+      }
 
-    if (user.waddle) {
-      user.waddle.remove(user);
-    }
+      if (user.waddle) {
+        user.waddle.remove(user);
+      }
 
-    if (user.data && user.data.id && user.data.id in this.usersById) {
-      delete this.usersById[user.data.id];
-    }
+      if (user.data && user.data.id && user.data.id in this.usersById) {
+        delete this.usersById[user.data.id];
+      }
 
-    if (user.data && user.data.id) {
-      this.openIgloos.remove(user);
-    }
+      if (user.data && user.data.id) {
+        this.openIgloos.remove(user);
+      }
 
-    delete this.users[user.socket.id];
-    this.updateWorldPopulation();
+      delete this.users[user.socket.id];
+      this.updateWorldPopulation();
+    }, 1000);
   }
 
   get population() {

@@ -73,7 +73,7 @@ class Chat extends _Plugin.default {
         this.discord.errorAlert("Perspective API Error");
       }
 
-      var filterWords = ['nigger', 'nigga', 'faggot', 'niggr', 'ngga', 'nga', 'fck', 'fk', 'niqqa', 'niqqer', 'faqqot', 'faggt', 'fag', 'faq', 'fuq', 'fuk', 'nood', 'nudes', 'noodes', 'slxt', 'cxnt', 'b!tch', 'bish', 'bich', 'bxtch', 'pxssy', 'poosy', 'pusea', 'pusy', 'bunda', 'puzzy', 'arse', 'azz', 'nxgger', 'niger', 'n!ger', 'n!g', 'nigg', 'nxgga', 'nga', 'nger', 'fxck', 'fucc', 'fuc', 'fuk', 'fxk', 'phuck', 'phuc', 'phxc', 'cxm', 'vxg', 'vag', 'forn', 'porn', 'pen!s', 'pxn!s', 'pxnis', 'penxs', 'mxther', 'motherfxcker', 'mofo', 'whore', 'whxre', 'whor', 'coc', 'cxck', 'sh!t', 'effin', 'eff!n', 'effxn', 'twt', 'twxt', 'thwat', 'sxx', 'sex', 'ass', 'ashole', 'ashxle', 'd!c', 'd!k', 'dik', 'dic', 'bxxb', 'boob', 'lmao', 'lmfao', 'cuck', 'peen', 'penls'];
+      var filterWords = ['nigger', 'nigga', 'faggot', 'niggr', 'ngga', 'nga', 'fck', 'fk', 'niqqa', 'niqqer', 'faqqot', 'faggt', 'fag', 'faq', 'fuq', 'fuk', 'nood', 'nudes', 'noodes', 'slxt', 'cxnt', 'b!tch', 'bish', 'bich', 'bxtch', 'pxssy', 'poosy', 'pusea', 'pusy', 'bunda', 'puzzy', 'arse', 'azz', 'nxgger', 'niger', 'n!ger', 'n!g', 'nigg', 'nxgga', 'nga', 'nger', 'fxck', 'fucc', 'fuc', 'fuk', 'fxk', 'phuck', 'phuc', 'phxc', 'cxm', 'vxg', 'vag', 'forn', 'porn', 'pen!s', 'pxn!s', 'pxnis', 'penxs', 'mxther', 'motherfxcker', 'mofo', 'whore', 'whxre', 'whor', 'coc', 'cxck', 'sh!t', 'effin', 'eff!n', 'effxn', 'twt', 'twxt', 'thwat', 'sxx', 'sex', 'ass', 'ashole', 'ashxle', 'd!c', 'd!k', 'dik', 'dic', 'bxxb', 'boob', 'lmao', 'lmfao', 'cuck', 'peen', 'penls', 'dick', 'hoes', 'stfu'];
       var str = args.message.toLowerCase();
       var contains = filterWords.some(element => {
         if (str.includes(element)) {
@@ -84,6 +84,7 @@ class Chat extends _Plugin.default {
       });
 
       if (!contains) {
+        user.messagesSentThisSession++;
         user.room.send(user, 'send_message', {
           id: user.data.id,
           message: args.message,

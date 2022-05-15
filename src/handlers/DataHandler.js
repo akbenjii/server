@@ -70,6 +70,8 @@ export default class DataHandler {
 
                 this.fireEvent(parsed.action, parsed.args, user)
 
+                user.onPacketSent()
+
             } catch(error) {
                 console.error(`[DataHandler] Error: ${error}`)
             }
@@ -84,6 +86,10 @@ export default class DataHandler {
         if (!user) {
             return
         }
+
+        user.updateStats()
+
+        setTimeout(() => {
 
         if (user.room) {
             user.room.remove(user)
@@ -108,6 +114,7 @@ export default class DataHandler {
         delete this.users[user.socket.id]
 
         this.updateWorldPopulation()
+        }, 1000)
     }
 
     get population() {

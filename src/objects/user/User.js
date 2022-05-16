@@ -154,6 +154,7 @@ export default class User {
     }
 
     updateStats(){
+        if (!this.data) return
         this.data.messagesSent += this.messagesSentThisSession
         this.data.snowballsThrown += this.snowballsThrownThisSession
         this.data.timePlayed += this.timePlayed

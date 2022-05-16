@@ -69,11 +69,6 @@ export default class GameAuth extends Plugin {
         // Remove login key from database
         user.update({ loginKey: null })
 
-        // Set selector for token destruction
-        if (args.token) {
-            user.token.oldSelector = args.token
-        }
-
         // Create new token
         if (args.createToken) {
             token = await this.genAuthToken(user)
@@ -109,13 +104,8 @@ export default class GameAuth extends Plugin {
     async genAuthToken(user) {
 
         let userData = await this.db.getUserById(user.data.id)
-        let password = userData.password
+        let validator = userData.password
         let selector = userData.username
-        let validator = password
-        let validatorHash = await bcrypt.hash(validator, this.config.crypto.rounds)
-
-        user.token.selector = selector
-        user.token.validatorHash = validatorHash
 
         return `${selector}:${validator}`
     }

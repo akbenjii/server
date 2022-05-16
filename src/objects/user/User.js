@@ -169,7 +169,7 @@ export default class User {
         clearTimeout(this.closeInactive)
         this.closeInactive = setTimeout(() => {
             this.close()
-        }, 600000)
+        }, 3600000)
     }
 
 }

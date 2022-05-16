@@ -38,24 +38,6 @@ class Join extends _Plugin.default {
   }
 
   joinServer(args, user) {
-    // Update token on database now that user has fully connected
-    if (user.token.oldSelector) {
-      this.db.authTokens.destroy({
-        where: {
-          userId: user.data.id,
-          selector: user.token.oldSelector
-        }
-      });
-    }
-
-    if (user.token.selector && user.token.validatorHash) {
-      this.db.authTokens.create({
-        userId: user.data.id,
-        selector: user.token.selector,
-        validator: user.token.validatorHash
-      });
-    }
-
     user.room.add(user);
   } // Limit this to 1/2 uses per second
 

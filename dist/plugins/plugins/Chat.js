@@ -20,7 +20,6 @@ class Chat extends _Plugin.default {
       'send_emote': this.sendEmote
     };
     this.commands = {
-      'ai': this.addItem,
       'users': this.userPopulation,
       'broadcast': this.broadcast
     };
@@ -73,15 +72,26 @@ class Chat extends _Plugin.default {
         this.discord.errorAlert("Perspective API Error");
       }
 
-      var filterWords = ['nigger', 'nigga', 'faggot', 'niggr', 'ngga', 'nga', 'fck', 'fk', 'niqqa', 'niqqer', 'faqqot', 'faggt', 'fag', 'faq', 'fuq', 'fuk', 'nood', 'nudes', 'noodes', 'slxt', 'cxnt', 'b!tch', 'bish', 'bich', 'bxtch', 'pxssy', 'poosy', 'pusea', 'pusy', 'bunda', 'puzzy', 'arse', 'azz', 'nxgger', 'niger', 'n!ger', 'n!g', 'nigg', 'nxgga', 'nga', 'nger', 'fxck', 'fucc', 'fuc', 'fuk', 'fxk', 'phuck', 'phuc', 'phxc', 'cxm', 'vxg', 'vag', 'forn', 'porn', 'pen!s', 'pxn!s', 'pxnis', 'penxs', 'mxther', 'motherfxcker', 'mofo', 'whore', 'whxre', 'whor', 'coc', 'cxck', 'sh!t', 'effin', 'eff!n', 'effxn', 'twt', 'twxt', 'thwat', 'sxx', 'sex', 'ass', 'ashole', 'ashxle', 'd!c', 'd!k', 'dik', 'dic', 'bxxb', 'boob', 'lmao', 'lmfao', 'cuck', 'peen', 'penls', 'dick', 'hoes', 'stfu'];
-      var str = args.message.toLowerCase();
-      var contains = filterWords.some(element => {
-        if (str.includes(element)) {
-          return true;
+      var specificFilterWords = ['ass', 'hoe', 'nga'];
+      var filterWords = ['nigger', 'nigga', 'faggot', 'niggr', 'ngga', 'fck', 'fk', 'niqqa', 'niqqer', 'faqqot', 'faggt', 'fag', 'faq', 'fuq', 'fuk', 'nood', 'nudes', 'noodes', 'slxt', 'cxnt', 'b!tch', 'bish', 'bich', 'bxtch', 'pxssy', 'poosy', 'pusea', 'pusy', 'bunda', 'puzzy', 'arse', 'azz', 'nxgger', 'niger', 'n!ger', 'n!g', 'nigg', 'nxgga', 'nga', 'nger', 'fxck', 'fucc', 'fuc', 'fuk', 'fxk', 'phuck', 'phuc', 'phxc', 'cxm', 'vxg', 'vag', 'forn', 'porn', 'pen!s', 'pxn!s', 'pxnis', 'penxs', 'mxther', 'motherfxcker', 'mofo', 'whore', 'whxre', 'whor', 'coc', 'cxck', 'sh!t', 'effin', 'eff!n', 'effxn', 'twt', 'twxt', 'thwat', 'sxx', 'sex', 'tass', 'ashole', 'ashxle', 'd!c', 'd!k', 'dik', 'dic', 'bxxb', 'boob', 'lmao', 'lmfao', 'cuck', 'peen', 'penls', 'dick', 'hoes', 'stfu'];
+      var wordWhitelist = ['shoes', 'afk', 'coco', 'engage', 'echoes', 'snowshoes', 'horseshoes', 'shoestrings', 'offkey'];
+      var words = args.message.toLowerCase().split(" ");
+      var contains = false;
+
+      for (var x in words) {
+        if (filterWords.includes(words[x]) || specificFilterWords.includes(words[x])) {
+          contains = true;
+          continue;
         }
 
-        return false;
-      });
+        if (!wordWhitelist.includes(words[x])) {
+          filterWords.some(element => {
+            if (words[x].includes(element)) {
+              contains = true;
+            }
+          });
+        }
+      }
 
       if (!contains) {
         user.messagesSentThisSession++;
@@ -130,14 +140,6 @@ class Chat extends _Plugin.default {
 
     if (command in this.commands) {
       return this.commands[command](args, user);
-    }
-  }
-
-  addItem(args, user) {
-    if (user.isCommands) {
-      this.plugins.item.addItem({
-        item: args[0]
-      }, user);
     }
   }
 

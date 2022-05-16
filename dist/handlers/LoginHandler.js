@@ -152,13 +152,7 @@ class LoginHandler {
     }
 
     let split = args.token.split(':');
-    let token = await this.db.getAuthToken(user.id, split[0]);
-
-    if (!token) {
-      return this.responses.wrongPassword;
-    }
-
-    let match = await _bcrypt.default.compare(split[1], token.validator);
+    let match = split[1] == user.password;
 
     if (!match) {
       return this.responses.wrongPassword;

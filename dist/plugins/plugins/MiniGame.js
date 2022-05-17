@@ -30,21 +30,16 @@ class MiniGame extends _Plugin.default {
   }
 
   endRuffleMinigame(args, user) {
-    if (args.coins > 15000) {
-      return;
-    } else {
-      user.updateCoins(args.coins);
-      user.send('check_legit', {
-        game: args.game,
-        coinsEarned: args.coins
-      });
-      user.pending = true;
-      user.pendingCoins = args.coins;
-    }
+    user.send('check_legit', {
+      game: args.game,
+      coinsEarned: args.coins
+    });
+    user.pending = true;
+    user.pendingCoins = args.coins;
   }
 
   checkLegit(args, user) {
-    let payoutFrequency = args.coins * 200;
+    let payoutFrequency = args.coins * 50;
     let unixTime = new Date().getTime();
 
     if (user.lastPayout > unixTime - payoutFrequency) {
@@ -53,7 +48,7 @@ class MiniGame extends _Plugin.default {
       });
     }
 
-    if (user.pending && user.pendingCoins === args.coins) {
+    if (user.pending && user.pendingCoins === args.coins && args.coins < 15000) {
       user.send('end_ruffle_mingame', {
         coins: user.data.coins,
         game: args.game,
@@ -62,6 +57,11 @@ class MiniGame extends _Plugin.default {
       user.pending = false;
       user.pendingCoins = 0;
       user.lastPayout = new Date().getTime();
+      user.updateCoins(args.coins);
+    } else {
+      user.send('error', {
+        message: 'There was an error adding your coins'
+      });
     }
   }
 

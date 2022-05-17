@@ -3,6 +3,7 @@ import FurnitureInventory from './FurnitureInventory'
 import IglooInventory from './IglooInventory'
 import Ignore from './Ignore'
 import Inventory from './Inventory'
+import Stamps from './Stamps'
 import PurchaseValidator from './PurchaseValidator'
 
 
@@ -96,6 +97,10 @@ export default class User {
 
     setFurnitureInventory(inventory) {
         this.furnitureInventory = new FurnitureInventory(this, inventory)
+    }
+
+    setStamps(stamps) {
+        this.stamps = new Stamps(this, stamps)
     }
 
     setItem(slot, item) {

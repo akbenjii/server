@@ -80,11 +80,10 @@ class Buddy extends _Plugin.default {
   }
 
   buddyFind(args, user) {
-    if (!user.buddy.includes(args.id) || !(args.id in this.usersById)) {
-      return;
-    }
-
+    if (!user.buddy.includes(args.id) && user.data.rank < 4) return;
+    if (!(args.id in this.usersById)) return;
     let buddy = this.usersById[args.id];
+    if (buddy.data.stealthMode) return;
 
     if (!buddy.room) {
       return;

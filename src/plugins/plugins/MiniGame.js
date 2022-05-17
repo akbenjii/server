@@ -24,28 +24,29 @@ export default class MiniGame extends Plugin {
     }
 	
 	endRuffleMinigame(args, user) {
-		if (args.coins > 15000){
-			return
-		}
-		else{
-			user.updateCoins(args.coins)
-			user.send('check_legit', { game: args.game, coinsEarned: args.coins })
-            user.pending = true
-            user.pendingCoins = args.coins
-		}
-	}
+        user.send('check_legit', {game: args.game, coinsEarned: args.coins})
+        user.pending = true
+        user.pendingCoins = args.coins
+    }
 
     checkLegit(args, user) {
-        let payoutFrequency = args.coins * 200
+        let payoutFrequency = args.coins * 50
         let unixTime = (new Date()).getTime()
         if (user.lastPayout > (unixTime - payoutFrequency)) {
             return user.send('error', { error: 'You have earned too many coins too quickly! These coins have not been added as we fear they may have been cheated.' })
         }
-        if (user.pending && user.pendingCoins === args.coins) {
-            user.send('end_ruffle_mingame', { coins: user.data.coins, game: args.game, coinsEarned: args.coins })
+        if (user.pending && user.pendingCoins === args.coins && args.coins < 15000) {
             user.pending = false
             user.pendingCoins = 0
             user.lastPayout = (new Date()).getTime()
+            user.updateCoins(args.coins)
+            for (var x in args.stamps) {
+                user.stamps.add(args.stamps[x])
+            }
+            user.send('end_ruffle_mingame', { coins: user.data.coins, game: args.game, coinsEarned: args.coins, stamps: user.stamps.list })
+        }
+        else {
+            user.send('error', { message: 'There was an error adding your coins' })
         }
     }
 

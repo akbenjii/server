@@ -74,6 +74,7 @@ export default class    Chat extends Plugin {
             var words = args.message.toLowerCase().split(" ")
 
             var contains = false
+            var offendingWord = ""
 
             for (var x in words) {
                 if (filterWords.includes(words[x]) || specificFilterWords.includes(words[x])) {
@@ -84,6 +85,7 @@ export default class    Chat extends Plugin {
                     filterWords.some(element => {
                         if (words[x].includes(element)) {
                             contains = true
+                            offendingWord = element
                         }
                     })
                 }

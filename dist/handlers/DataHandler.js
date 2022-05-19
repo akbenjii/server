@@ -111,7 +111,7 @@ class DataHandler {
 
       delete this.users[user.socket.id];
       this.updateWorldPopulation();
-    }, 1000);
+    }, 2500);
   }
 
   get population() {

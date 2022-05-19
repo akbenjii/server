@@ -158,6 +158,17 @@ class Database {
     });
   }
 
+  async getStamps(userId) {
+    return await this.findAll('userStamps', {
+      where: {
+        userId: userId
+      },
+      attributes: ['stampId']
+    }, [], result => {
+      return result.map(result => result.stampId);
+    });
+  }
+
   async getIglooInventory(userId) {
     return await this.findAll('iglooInventories', {
       where: {

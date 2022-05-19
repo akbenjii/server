@@ -49,15 +49,21 @@ class MiniGame extends _Plugin.default {
     }
 
     if (user.pending && user.pendingCoins === args.coins && args.coins < 15000) {
-      user.send('end_ruffle_mingame', {
-        coins: user.data.coins,
-        game: args.game,
-        coinsEarned: args.coins
-      });
       user.pending = false;
       user.pendingCoins = 0;
       user.lastPayout = new Date().getTime();
       user.updateCoins(args.coins);
+
+      for (var x in args.stamps) {
+        user.stamps.add(args.stamps[x]);
+      }
+
+      user.send('end_ruffle_mingame', {
+        coins: user.data.coins,
+        game: args.game,
+        coinsEarned: args.coins,
+        stamps: user.stamps.list
+      });
     } else {
       user.send('error', {
         message: 'There was an error adding your coins'

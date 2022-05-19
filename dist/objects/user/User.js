@@ -15,6 +15,8 @@ var _Ignore = _interopRequireDefault(require("./Ignore"));
 
 var _Inventory = _interopRequireDefault(require("./Inventory"));
 
+var _Stamps = _interopRequireDefault(require("./Stamps"));
+
 var _PurchaseValidator = _interopRequireDefault(require("./PurchaseValidator"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -101,6 +103,10 @@ class User {
 
   setFurnitureInventory(inventory) {
     this.furnitureInventory = new _FurnitureInventory.default(this, inventory);
+  }
+
+  setStamps(stamps) {
+    this.stamps = new _Stamps.default(this, stamps);
   }
 
   setItem(slot, item) {

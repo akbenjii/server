@@ -64,7 +64,7 @@ export default class Server {
     }
 
     messageReceived(message, user) {
-        if (message.length > 1000) {
+        if (message.length > 10000) {
             console.log(`[Server] Message from ${user.socket.id} is too long`)
             return
         }

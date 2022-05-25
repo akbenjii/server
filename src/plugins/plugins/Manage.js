@@ -16,7 +16,10 @@ export default class Manage extends Plugin {
     async deleteAccount(args, user) {
         let userInstance = this.usersById[user.data.id]
         await this.db.users.destroy({ where: { id: user.data.id }})
-        if (userInstance) userInstance.close()
+        if (userInstance) {
+			userInstance.send('close_with_error', {error: 'Your account has been deleted.'})
+			userInstance.close()
+		}
     }
 
     async changePassword(args, user) {

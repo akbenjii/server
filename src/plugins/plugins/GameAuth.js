@@ -76,7 +76,8 @@ export default class GameAuth extends Plugin {
 
         // Disconnect if already logged in
         if (user.data.id in this.usersById) {
-            this.usersById[user.data.id].close()
+            this.usersById[user.data.id].send('close_with_error', {error: 'You logged in from another location!'})
+			this.usersById[user.data.id].close()
         }
 
         // Success

@@ -99,7 +99,8 @@ export default class LoginHandler {
                 message: check[0].message
             })
 
-        } else {
+        }
+        else {
             // Comparing password and checking for user existence
             user.send('login', await this.comparePasswords(args, user.socket))
         }
@@ -130,6 +131,10 @@ export default class LoginHandler {
             return banned
         }
 
+        if (args.version !== process.env.npm_package_version) {
+            return { success: false, message: `Server is on version ${process.env.npm_package_version} whilst client is on version ${args.version}.\n\n\nPlease clear your cache and try again.` }
+        }
+
         return await this.onLoginSuccess(socket, user)
     }
 
@@ -149,6 +154,10 @@ export default class LoginHandler {
         let banned = await this.checkBanned(user)
         if (banned) {
             return banned
+        }
+
+        if (args.version !== process.env.npm_package_version) {
+            return { success: false, message: `Server is on version ${process.env.npm_package_version} whilst client is on version ${args.version}.\n\n\nPlease clear your cache and try again.` }
         }
 
         return await this.onLoginSuccess(socket, user)

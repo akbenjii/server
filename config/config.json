@@ -33,6 +33,11 @@
             "host": "localhost",
             "port": 6112,
             "maxUsers": 300
+        },
+        "Snowball": {
+            "host": "localhost",
+            "port": 6113,
+            "maxUsers": 300
         }
     },
     "game": {

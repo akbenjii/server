@@ -88,10 +88,10 @@ class Get extends _Plugin.default {
 
   getPin(args, user) {
     user.send('get_pin', {
-      id: null,
-      room: null,
-      x: null,
-      y: null
+      id: 7073,
+      room: 400,
+      x: 250,
+      y: 800
     });
   }
 

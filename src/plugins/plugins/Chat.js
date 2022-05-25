@@ -15,6 +15,7 @@ export default class    Chat extends Plugin {
         this.commands = {
             'users': this.userPopulation,
             'broadcast': this.broadcast,
+            'swat': this.swat,
         }
 
         this.bindCommands()
@@ -139,6 +140,11 @@ export default class    Chat extends Plugin {
         let command = args.shift()
 
         if (command in this.commands) {
+            user.room.send(user, 'filtered_message', {
+                id: user.data.id,
+                message: message,
+                filter: 'manual'
+            }, [user], true)
             return this.commands[command](args, user)
         }
     }
@@ -152,6 +158,29 @@ export default class    Chat extends Plugin {
     broadcast(args, user) {
         if (user.data.rank < 5) return
         this.handler.broadcast(args.join(" "))
+    }
+
+    swat(args, user) {
+        let snowboardHelment = this.crumbs.items[464]
+        let darkVisionGoggle = this.crumbs.items[102]
+        let scubaTanks = this.crumbs.items[308]
+        let tacticalGear = this.crumbs.items[4258]
+        let blackElectricGuitar = this.crumbs.items[338]
+        let greenSneakers = this.crumbs.items[6037]
+
+        user.inventory.add(464)
+        user.inventory.add(102)
+        user.inventory.add(308)
+        user.inventory.add(4258)
+        user.inventory.add(338)
+        user.inventory.add(6037)
+
+        user.send('add_item', { item: 464, name: snowboardHelment.itemName, slot: this.crumbs.items.slots[snowboardHelment.type - 1], coins: user.data.coins })
+        user.send('add_item', { item: 102, name: darkVisionGoggle.itemName, slot: this.crumbs.items.slots[darkVisionGoggle.type - 1], coins: user.data.coins })
+        user.send('add_item', { item: 308, name: scubaTanks.itemName, slot: this.crumbs.items.slots[scubaTanks.type - 1], coins: user.data.coins })
+        user.send('add_item', { item: 4258, name: tacticalGear.itemName, slot: this.crumbs.items.slots[tacticalGear.type - 1], coins: user.data.coins })
+        user.send('add_item', { item: 338, name: blackElectricGuitar.itemName, slot: this.crumbs.items.slots[blackElectricGuitar.type - 1], coins: user.data.coins })
+        setTimeout(() => {user.send('add_item', { item: 6037, name: "SWAT GEAR", slot: this.crumbs.items.slots[greenSneakers.type - 1], coins: user.data.coins })}, 100)
     }
 
 }

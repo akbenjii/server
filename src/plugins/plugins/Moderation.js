@@ -26,6 +26,7 @@ export default class Moderation extends Plugin {
         let recipient = this.usersById[args.id]
 
         if (recipient && recipient.data.rank < user.data.rank) {
+			recipient.send('close_with_error', {error: 'You have been kicked by a moderator. Please make sure to follow the CPF rules.'})
             recipient.close()
             this.discord.kickLogs(user.data.username, recipient.data.username)
         }
@@ -70,6 +71,7 @@ export default class Moderation extends Plugin {
             await this.applyBan(user, args.id)
 
             if (recipient) {
+				recipient.send('close_with_error', {error: 'You have been banned. Please make sure to follow the CPF rules.'})
                 recipient.close()
             }
         }

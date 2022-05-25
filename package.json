@@ -3,7 +3,7 @@
   "version": "1.2.2-beta",
   "description": "A server for https://github.com/cpforever/client/",
   "scripts": {
-    "dev": "babel-watch ./src/World.js Login Blizzard",
+    "dev": "babel-watch ./src/World.js Login Blizzard Snowball",
     "build": "babel src -d dist --copy-files",
     "start": "pm2 start ecosystem.config.js",
     "stop": "pm2 stop ecosystem.config.js",

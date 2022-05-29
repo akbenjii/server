@@ -141,6 +141,13 @@ class LoginHandler {
       return banned;
     }
 
+    if (args.version !== process.env.npm_package_version) {
+      return {
+        success: false,
+        message: `Server is on version ${process.env.npm_package_version} whilst client is on version ${args.version}.\n\n\nPlease clear your cache and try again.`
+      };
+    }
+
     return await this.onLoginSuccess(socket, user);
   }
 
@@ -162,6 +169,13 @@ class LoginHandler {
 
     if (banned) {
       return banned;
+    }
+
+    if (args.version !== process.env.npm_package_version) {
+      return {
+        success: false,
+        message: `Server is on version ${process.env.npm_package_version} whilst client is on version ${args.version}.\n\n\nPlease clear your cache and try again.`
+      };
     }
 
     return await this.onLoginSuccess(socket, user);

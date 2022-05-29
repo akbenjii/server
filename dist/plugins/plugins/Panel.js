@@ -199,15 +199,18 @@ class Panel extends _Plugin.default {
       let date = new Date();
       let expiry = date.getTime() + args.banDuration;
       await this.db.ban(args.id, expiry, user.data.id);
+      let userName = (await this.db.getUserById(args.id)).username;
+      let expiryDate = new Date(expiry);
 
       if (recipient) {
+        recipient.send('close_with_error', {
+          error: `You have been banned until ${expiryDate.toUTCString()}. Please make sure to follow the CPF rules.`
+        });
         recipient.close();
       }
 
-      let userName = (await this.db.getUserById(args.id)).username;
-      let expiryDate = new Date(expiry);
       user.send('error', {
-        error: 'Player banned until ' + expiryDate.toUTCString()
+        error: `Player banned until ${expiryDate.toUTCString()}`
       });
       this.discord.banLogs(user.data.username, userName, args.durationText, expiryDate.toUTCString());
     } else {

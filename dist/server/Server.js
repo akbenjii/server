@@ -57,18 +57,21 @@ class Server {
   connectionMade(socket) {
     let ip = socket.client.request.headers['cf-connecting-ip'] ? socket.client.request.headers['cf-connecting-ip'] : socket.request.connection.remoteAddress;
     console.log(`[Server] Connection from: ${ip}`);
-    let user = new _User.default(socket, this.handler);
-    this.users[socket.id] = user;
-    this.users[socket.id].ipAddress = ip;
 
     if (this.handler.id == 'Snowball') {
       for (var x in this.users) {
         if (this.users[x].ipAddress == ip) {
-          user.close();
+          this.users[x].send('close_with_error', {
+            error: `This IP address has connected to a new user - Server ${this.handler.id} does not allow Multi-Logging!`
+          });
+          this.users[x].close();
         }
       }
     }
 
+    let user = new _User.default(socket, this.handler);
+    this.users[socket.id] = user;
+    this.users[socket.id].ipAddress = ip;
     socket.on('message', message => this.messageReceived(message, user));
     socket.on('disconnect', () => this.connectionLost(user));
   }

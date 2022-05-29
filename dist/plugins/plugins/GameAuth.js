@@ -85,6 +85,9 @@ class GameAuth extends _Plugin.default {
 
 
     if (user.data.id in this.usersById) {
+      this.usersById[user.data.id].send('close_with_error', {
+        error: 'You logged in from another location!'
+      });
       this.usersById[user.data.id].close();
     } // Success
 

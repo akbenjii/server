@@ -129,6 +129,18 @@ export default class Users extends Sequelize.Model {
                     type: DataTypes.INTEGER(1),
                     allowNull: false
                 },
+                stampbookColor: {
+                    type: DataTypes.INTEGER(1),
+                    allowNull: false
+                },
+                stampbookClasp: {
+                    type: DataTypes.INTEGER(1),
+                    allowNull: false
+                },
+                stampbookPattern: {
+                    type: DataTypes.INTEGER(1),
+                    allowNull: false
+                }
             },
             { sequelize, timestamps: false, tableName: 'users' }
         )

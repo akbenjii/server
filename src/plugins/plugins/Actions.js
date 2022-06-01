@@ -9,7 +9,8 @@ export default class Actions extends Plugin {
             'send_position': this.sendPosition,
             'send_frame': this.sendFrame,
             'snowball': this.snowball,
-            'stamp_earned': this.stampEarned
+            'stamp_earned': this.stampEarned,
+            'save_stampbook': this.saveStampbook
         }
     }
 
@@ -41,6 +42,18 @@ export default class Actions extends Plugin {
             return
         }
         user.stamps.add(args.stamp)
+    }
+
+    saveStampbook(args, user) {
+        user.data.stampbookColor = args.color
+        user.data.stampbookClasp = args.clasp
+        user.data.stampbookPattern = args.pattern
+
+        user.update({
+            stampbookColor: user.data.stampbookColor,
+            stampbookClasp: user.data.stampbookClasp,
+            stampbookPattern: user.data.stampbookPattern
+        })
     }
 
 }

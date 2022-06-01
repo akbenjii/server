@@ -24,6 +24,9 @@ export default class Join extends Plugin {
             room: user.room.id,
 
             joinTime: user.data.joinTime,
+            stampbookClasp: user.data.stampbookClasp,
+            stampbookColor: user.data.stampbookColor,
+            stampbookPattern: user.data.stampbookPattern,
 
             buddies: user.buddy.list,
             ignores: user.ignore.list,

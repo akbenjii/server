@@ -11,7 +11,8 @@ export default class Get extends Plugin {
             'get_player': this.getPlayer,
             'get_rank': this.getRank,
             'get_pin': this.getPin,
-            'get_statistics': this.getStatistics
+            'get_statistics': this.getStatistics,
+            'get_stampbook': this.getStampbook
         }
     }
 
@@ -92,6 +93,9 @@ export default class Get extends Plugin {
             partyTasksCompleted: user.data.partyTasksCompleted,
             hasBeenPOTW: user.data.hasBeenPOTW,
         }), 1000)
+    }
+
+    async getStampbook(args, user) {
     }
 
 }

@@ -8,7 +8,8 @@ export default class Actions extends Plugin {
         this.events = {
             'send_position': this.sendPosition,
             'send_frame': this.sendFrame,
-            'snowball': this.snowball
+            'snowball': this.snowball,
+            'stamp_earned': this.stampEarned
         }
     }
 
@@ -33,6 +34,13 @@ export default class Actions extends Plugin {
     snowball(args, user) {
         user.snowballsThrownThisSession++
         user.room.send(user, 'snowball', { id: user.data.id, x: args.x, y: args.y })
+    }
+
+    stampEarned(args, user) {
+        if (user.stamps.includes(args.stamp)) {
+            return
+        }
+        user.stamps.add(args.stamp)
     }
 
 }

@@ -19,8 +19,8 @@ export default class Server {
         })
 
         this.rateLimiter = new RateLimiterFlexible.RateLimiterMemory({
-            // 100 events allowed per second
-            points: 100,
+            // 20 events allowed per second
+            points: 20,
             duration: 1
         })
 
@@ -79,7 +79,7 @@ export default class Server {
             return
         }
         // Consume 1 point per event from IP address
-        this.rateLimiter.consume(user.socket.handshake.address)
+        this.rateLimiter.consume(user.ipAddress)
             .then(() => {
                 // Allowed
                 this.handler.handle(message, user)

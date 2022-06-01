@@ -160,6 +160,7 @@ class Panel extends _Plugin.default {
     let userName = (await this.db.getUserById(args.id)).username;
     this.discord.addItemLogs(user.data.username, userName, args.itemName);
     let recipient = this.usersById[args.id];
+    args.item = parseInt(args.item);
 
     if (recipient) {
       let item = this.crumbs.items[args.item];

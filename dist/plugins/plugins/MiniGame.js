@@ -55,7 +55,9 @@ class MiniGame extends _Plugin.default {
       user.updateCoins(args.coins);
 
       for (var x in args.stamps) {
-        user.stamps.add(args.stamps[x]);
+        if (!user.stamps.includes(args.stamps[x])) {
+          user.stamps.add(args.stamps[x]);
+        }
       }
 
       user.send('end_ruffle_mingame', {

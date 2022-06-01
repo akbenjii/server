@@ -44,6 +44,10 @@ class FindFourInstance extends _WaddleInstance.default {
       this.send('four_over', {
         winner: user.data.id
       });
+      user.data.findFourWon = user.data.findFourWon + 1;
+      user.update({
+        findFourWon: user.data.findFourWon
+      });
 
       for (let x in this.users) {
         this.waddle.remove(this.users[x]);
@@ -71,7 +75,6 @@ class FindFourInstance extends _WaddleInstance.default {
         adjacent = adjacent + 1;
       }
 
-      console.log(`Vertical Match: ${adjacent}`);
       if (adjacent >= 4) return true;
 
       if (this.map[column][row] !== user) {
@@ -88,7 +91,6 @@ class FindFourInstance extends _WaddleInstance.default {
         adjacent = adjacent + 1;
       }
 
-      console.log(`Horizontal Match: ${adjacent}`);
       if (adjacent >= 4) return true;
 
       if (this.map[column][row] !== user) {
@@ -99,36 +101,47 @@ class FindFourInstance extends _WaddleInstance.default {
 
   checkDiagonalMatch(column, row, user) {
     let adjacent = 0;
-    let offset = column - row;
 
     for (let i = 0; i < 7; i++) {
-      if (!this.map[i + offset]) break;
-      if (!this.map[i + offset][i]) break;
-
-      if (this.map[i + offset][i] === user) {
-        adjacent = adjacent + 1;
-      }
-
-      console.log(`Diagonal Match: ${adjacent}`);
-      if (adjacent >= 4) return true;
-
-      if (this.map[i + offset][i] !== user) {
+      if (!this.map[column + i]) {
         adjacent = 0;
+        break;
       }
-    }
 
-    for (let i = 0; i < 7; i++) {
-      if (!this.map[column + i]) break;
-      if (!this.map[column + i][row - i]) break;
+      if (!this.map[column + i][row - i]) {
+        adjacent = 0;
+        break;
+      }
 
       if (this.map[column + i][row - i] === user) {
         adjacent = adjacent + 1;
       }
 
-      console.log(`Diagonal Match: ${adjacent}`);
       if (adjacent >= 4) return true;
 
       if (this.map[column + i][row - i] !== user) {
+        adjacent = 0;
+      }
+    }
+
+    for (let i = 0; i < 7; i++) {
+      if (!this.map[column - i]) {
+        adjacent = 0;
+        break;
+      }
+
+      if (!this.map[column - i][row - i]) {
+        adjacent = 0;
+        break;
+      }
+
+      if (this.map[column - i][row - i] === user) {
+        adjacent = adjacent + 1;
+      }
+
+      if (adjacent >= 4) return true;
+
+      if (this.map[column - i][row - i] !== user) {
         adjacent = 0;
       }
     }
@@ -136,10 +149,6 @@ class FindFourInstance extends _WaddleInstance.default {
 
   remove(user) {
     let winner = this.users[0].data.id === user.data.id ? this.users[1] : this.users[0];
-    winner.data.findFourWon++;
-    winner.update({
-      findFourWon: winner.data.findFourWon
-    });
     this.send('four_over', {
       winner: winner.data.id
     });

@@ -24,8 +24,8 @@ class Server {
       path: '/'
     });
     this.rateLimiter = new _rateLimiterFlexible.default.RateLimiterMemory({
-      // 100 events allowed per second
-      points: 100,
+      // 20 events allowed per second
+      points: 20,
       duration: 1
     });
     this.server = io.listen(config.worlds[id].port);
@@ -83,7 +83,7 @@ class Server {
     } // Consume 1 point per event from IP address
 
 
-    this.rateLimiter.consume(user.socket.handshake.address).then(() => {
+    this.rateLimiter.consume(user.ipAddress).then(() => {
       // Allowed
       this.handler.handle(message, user);
     }).catch(() => {// Blocked

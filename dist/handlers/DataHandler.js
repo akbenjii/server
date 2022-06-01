@@ -67,9 +67,11 @@ class DataHandler {
         console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`); // Only allow game_auth until user is authenticated
 
         if (!user.authenticated && parsed.action != 'game_auth') {
-          return user.send('close_with_error', {
+          user.send('close_with_error', {
             error: 'Only game_auth packets are allowed before user is authenticated!'
           });
+          user.close();
+          return;
         }
 
         this.fireEvent(parsed.action, parsed.args, user);

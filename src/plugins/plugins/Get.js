@@ -75,7 +75,7 @@ export default class Get extends Plugin {
             }
         }
 
-        user.send('get_statistics', {
+        setTimeout(()=> user.send('get_statistics', {
             joinTime: user.data.joinTime,
             messagesSent: user.data.messagesSent,
             timePlayed: user.data.timePlayed,
@@ -91,7 +91,7 @@ export default class Get extends Plugin {
             pinsOwned: pinsOwned.length,
             partyTasksCompleted: user.data.partyTasksCompleted,
             hasBeenPOTW: user.data.hasBeenPOTW,
-        })
+        }), 1000)
     }
 
 }

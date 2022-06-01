@@ -15,7 +15,8 @@ class Actions extends _Plugin.default {
     this.events = {
       'send_position': this.sendPosition,
       'send_frame': this.sendFrame,
-      'snowball': this.snowball
+      'snowball': this.snowball,
+      'stamp_earned': this.stampEarned
     };
   }
 
@@ -51,6 +52,14 @@ class Actions extends _Plugin.default {
       x: args.x,
       y: args.y
     });
+  }
+
+  stampEarned(args, user) {
+    if (user.stamps.includes(args.stamp)) {
+      return;
+    }
+
+    user.stamps.add(args.stamp);
   }
 
 }

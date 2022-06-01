@@ -151,6 +151,7 @@ export default class User {
     }
 
     send(action, args = {}) {
+        if (this.data) console.log(`[User] Sent: ${action} ${JSON.stringify(args)} to ${this.data.username}`)
         this.socket.emit('message', JSON.stringify({ action: action, args: args }))
     }
 

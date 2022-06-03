@@ -26,7 +26,8 @@ export default class DataHandler {
             items: await this.db.getItems(),
             igloos: await this.db.getIgloos(),
             furnitures: await this.db.getFurnitures(),
-            floorings: await this.db.getFloorings()
+            floorings: await this.db.getFloorings(),
+            stamps: await this.db.getCStamps()
         }
 
         this.rooms = await this.setRooms()
@@ -61,7 +62,7 @@ export default class DataHandler {
         message.split('\xdd').filter(Boolean).forEach(packet => {
             try {
                 let parsed = JSON.parse(packet)
-                console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`)
+                //console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`)
 
                 // Only allow game_auth until user is authenticated
                 if (!user.authenticated && parsed.action != 'game_auth') {

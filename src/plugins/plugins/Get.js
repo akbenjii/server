@@ -12,7 +12,8 @@ export default class Get extends Plugin {
             'get_rank': this.getRank,
             'get_pin': this.getPin,
             'get_statistics': this.getStatistics,
-            'get_stampbook': this.getStampbook
+            'get_stampbook': this.getStampbook,
+            'get_mascots': this.getMascots
         }
     }
 
@@ -54,10 +55,10 @@ export default class Get extends Plugin {
 
     getPin(args, user) {
         user.send('get_pin', {
-            id: 7073,
-            room: 400,
-            x: 250,
-            y: 800
+            id: 7147,
+            room: 810,
+            x: 910,
+            y: 160
         })
     }
 
@@ -96,6 +97,15 @@ export default class Get extends Plugin {
     }
 
     async getStampbook(args, user) {
+        let stamps = await this.db.getStamps(args.user)
+        let target = await this.db.getUserById(args.user)
+        let inventory = await this.db.getInventory(args.user)
+
+        user.send('get_stampbook', { username: target.dataValues.username, stamps: stamps, color: target.dataValues.stampbookColor, clasp: target.dataValues.stampbookClasp, pattern: target.dataValues.stampbookPattern, inventory: inventory })
     }
 
+    async getMascots(args, user) {
+        let mascots = await this.db.getMascots()
+        user.send('get_mascots', { mascots: mascots })
+    }
 }

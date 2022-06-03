@@ -134,6 +134,18 @@ class Users extends _sequelize.default.Model {
       hasBeenPOTW: {
         type: DataTypes.INTEGER(1),
         allowNull: false
+      },
+      stampbookColor: {
+        type: DataTypes.INTEGER(1),
+        allowNull: false
+      },
+      stampbookClasp: {
+        type: DataTypes.INTEGER(1),
+        allowNull: false
+      },
+      stampbookPattern: {
+        type: DataTypes.INTEGER(1),
+        allowNull: false
       }
     }, {
       sequelize,

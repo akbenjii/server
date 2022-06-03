@@ -38,7 +38,88 @@ class MiniGame extends _Plugin.default {
     user.pendingCoins = args.coins;
   }
 
-  checkLegit(args, user) {
+  async checkLegit(args, user) {
+    let categoryStamps = [];
+    let ownedCategoryStamps = [];
+    let category;
+
+    switch (args.game.toLowerCase()) {
+      case "aquagrabber":
+        category = 13;
+        break;
+
+      case "astrobarrier":
+        category = 14;
+        break;
+
+      case "card":
+        category = 38;
+        break;
+
+      case "cjfire":
+        category = 32;
+        break;
+
+      case "cjsnow":
+        category = 60;
+        break;
+
+      case "cjwater":
+        category = 34;
+        break;
+
+      case "cartsurfer":
+        category = 28;
+        break;
+
+      case "catchinwaves":
+        category = 15;
+        break;
+
+      case "icefishing":
+        category = 52;
+        break;
+
+      case "jetpackadventure":
+        category = 11;
+        break;
+
+      case "pizzatron":
+        category = 54;
+        break;
+
+      case "pufflelaunch":
+        category = 48;
+        break;
+
+      case "pufflerescue":
+        category = 57;
+        break;
+
+      case "smoothie":
+        category = 58;
+        break;
+
+      case "sysdef":
+        category = 46;
+        break;
+
+      case "thinice":
+        category = 16;
+        break;
+
+      case "treasurehunt":
+        category = 56;
+        break;
+    }
+
+    for (var stamp in this.crumbs.stamps) {
+      if (this.crumbs.stamps[stamp].groupid == category) {
+        categoryStamps.push(stamp);
+        if (user.stamps.includes(parseInt(stamp))) ownedCategoryStamps.push(stamp);
+      }
+    }
+
     let payoutFrequency = args.coins * 50;
     let unixTime = new Date().getTime();
 
@@ -49,6 +130,10 @@ class MiniGame extends _Plugin.default {
     }
 
     if (user.pending && user.pendingCoins === args.coins && args.coins < 15000) {
+      if (categoryStamps.length > 1 && ownedCategoryStamps.length === categoryStamps.length) {
+        args.coins = Math.round(args.coins * 1.5);
+      }
+
       user.pending = false;
       user.pendingCoins = 0;
       user.lastPayout = new Date().getTime();
@@ -68,7 +153,7 @@ class MiniGame extends _Plugin.default {
       });
     } else {
       user.send('error', {
-        message: 'There was an error adding your coins'
+        error: 'There was an error adding your coins'
       });
     }
   }
@@ -86,9 +171,7 @@ class MiniGame extends _Plugin.default {
 
     let coins = this.getCoinsEarned(user, args.score);
     user.updateCoins(coins);
-    user.send('game_over', {
-      coins: user.data.coins
-    });
+    user.sledrace.setFinished(user.data.username, coins);
   }
 
   getCoinsEarned(user, score) {

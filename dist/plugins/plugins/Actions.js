@@ -16,7 +16,8 @@ class Actions extends _Plugin.default {
       'send_position': this.sendPosition,
       'send_frame': this.sendFrame,
       'snowball': this.snowball,
-      'stamp_earned': this.stampEarned
+      'stamp_earned': this.stampEarned,
+      'save_stampbook': this.saveStampbook
     };
   }
 
@@ -60,6 +61,17 @@ class Actions extends _Plugin.default {
     }
 
     user.stamps.add(args.stamp);
+  }
+
+  saveStampbook(args, user) {
+    user.data.stampbookColor = args.color;
+    user.data.stampbookClasp = args.clasp;
+    user.data.stampbookPattern = args.pattern;
+    user.update({
+      stampbookColor: user.data.stampbookColor,
+      stampbookClasp: user.data.stampbookClasp,
+      stampbookPattern: user.data.stampbookPattern
+    });
   }
 
 }

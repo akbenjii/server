@@ -48,6 +48,10 @@ class Database {
     return items;
   }
 
+  async getCStamps() {
+    return await this.getCrumb('stamps');
+  }
+
   async getIgloos() {
     return await this.getCrumb('igloos');
   }
@@ -189,6 +193,23 @@ class Database {
       raw: true
     }, {}, result => {
       return this.arrayToObject(result, 'itemId', 'quantity');
+    });
+  }
+
+  async getMascots() {
+    return await this.findAll('mascots', {
+      attributes: ['id', 'name', 'giveaway', 'stamp'],
+      raw: true
+    });
+  }
+
+  async getGiveaway(mascot) {
+    return await this.findOne('mascots', {
+      where: {
+        id: mascot
+      },
+      attributes: ['giveaway'],
+      raw: true
     });
   }
 

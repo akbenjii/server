@@ -41,8 +41,9 @@ class FindFourInstance extends _WaddleInstance.default {
     let diagonalMatch = this.checkDiagonalMatch(args.column, args.row, user.data.id);
 
     if (verticalMatch || horizontalMatch || diagonalMatch) {
+      let winner = user.data.id;
       this.send('four_over', {
-        winner: user.data.id
+        winner: winner
       });
       user.data.findFourWon = user.data.findFourWon + 1;
       user.update({
@@ -50,11 +51,58 @@ class FindFourInstance extends _WaddleInstance.default {
       });
 
       for (let x in this.users) {
+        if (this.users[x].data.id === winner) {
+          this.users[x].updateCoins(25);
+          this.users[x].send('end_ruffle_mingame', {
+            coins: this.users[x].data.coins,
+            game: "four",
+            coinsEarned: 25,
+            stamps: this.users[x].stamps.list
+          });
+        } else {
+          this.users[x].updateCoins(10);
+          this.users[x].send('end_ruffle_mingame', {
+            coins: this.users[x].data.coins,
+            game: "four",
+            coinsEarned: 10,
+            stamps: this.users[x].stamps.list
+          });
+        }
+
         this.waddle.remove(this.users[x]);
       }
 
       this.waddle.reset();
     } else {
+      this.tied = true;
+
+      for (var column in this.map) {
+        for (var row in this.map[column]) {
+          if (this.map[column][row] === 0) {
+            this.tied = false;
+          }
+        }
+      }
+
+      if (this.tied) {
+        this.send('four_over', {
+          winner: 0
+        });
+
+        for (let x in this.users) {
+          this.users[x].updateCoins(10);
+          this.users[x].send('end_ruffle_mingame', {
+            coins: this.users[x].data.coins,
+            game: "four",
+            coinsEarned: 10,
+            stamps: this.users[x].stamps.list
+          });
+          this.waddle.remove(this.users[x]);
+        }
+
+        this.waddle.reset();
+      }
+
       if (this.turn === this.users[0].data.id) {
         this.turn = this.users[1].data.id;
       } else {
@@ -154,8 +202,16 @@ class FindFourInstance extends _WaddleInstance.default {
     });
 
     for (let x in this.users) {
+      this.users[x].send('end_ruffle_mingame', {
+        coins: this.users[x].data.coins,
+        game: "four",
+        coinsEarned: 0,
+        stamps: this.users[x].stamps.list
+      });
       this.waddle.remove(this.users[x]);
     }
+
+    this.waddle.reset();
   }
 
 }

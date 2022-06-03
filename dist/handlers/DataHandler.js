@@ -33,7 +33,8 @@ class DataHandler {
       items: await this.db.getItems(),
       igloos: await this.db.getIgloos(),
       furnitures: await this.db.getFurnitures(),
-      floorings: await this.db.getFloorings()
+      floorings: await this.db.getFloorings(),
+      stamps: await this.db.getCStamps()
     };
     this.rooms = await this.setRooms();
     await this.setWaddles();
@@ -63,8 +64,8 @@ class DataHandler {
   handle(message, user) {
     message.split('\xdd').filter(Boolean).forEach(packet => {
       try {
-        let parsed = JSON.parse(packet);
-        console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`); // Only allow game_auth until user is authenticated
+        let parsed = JSON.parse(packet); //console.log(`[DataHandler] Received: ${parsed.action} ${JSON.stringify(parsed.args)}`)
+        // Only allow game_auth until user is authenticated
 
         if (!user.authenticated && parsed.action != 'game_auth') {
           user.send('close_with_error', {

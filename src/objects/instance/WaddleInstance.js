@@ -34,7 +34,6 @@ export default class WaddleInstance {
     // Functions
 
     getPayout(user, score) {
-        this.remove(user)
 
         if (score === 0) {
             user.data.sledRacesWon = user.data.sledRacesWon + 1

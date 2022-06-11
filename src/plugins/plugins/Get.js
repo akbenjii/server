@@ -55,10 +55,10 @@ export default class Get extends Plugin {
 
     getPin(args, user) {
         user.send('get_pin', {
-            id: 7147,
-            room: 810,
-            x: 910,
-            y: 160
+            id: null,
+            room: null,
+            x: null,
+            y: null
         })
     }
 
@@ -66,9 +66,16 @@ export default class Get extends Plugin {
 
         let bans = await this.db.getBanCount(user.data.id)
         let itemsReleased = await this.db.getReleasedItems(user)
-        let itemsOwned = user.inventory.list
+        let itemsOwned = []
         let pinsReleased = await this.db.getReleasedPins(user)
         let pinsOwned = []
+
+        for (let item of user.inventory.list) {
+            if (itemsReleased.includes(item)) {
+                itemsOwned.push(item)
+            }
+        }
+
         for (let item of itemsOwned) {
             for (let pin of pinsReleased) {
                 if (item === pin) {

@@ -27,6 +27,7 @@ export default class Join extends Plugin {
             stampbookClasp: user.data.stampbookClasp,
             stampbookColor: user.data.stampbookColor,
             stampbookPattern: user.data.stampbookPattern,
+            cannonData: user.data.cannon_data,
 
             buddies: user.buddy.list,
             ignores: user.ignore.list,

@@ -140,6 +140,9 @@ export default class Users extends Sequelize.Model {
                 stampbookPattern: {
                     type: DataTypes.INTEGER(1),
                     allowNull: false
+                },
+                cannon_data: {
+                    type: DataTypes.STRING(1000),
                 }
             },
             { sequelize, timestamps: false, tableName: 'users' }

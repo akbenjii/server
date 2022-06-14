@@ -146,6 +146,9 @@ class Users extends _sequelize.default.Model {
       stampbookPattern: {
         type: DataTypes.INTEGER(1),
         allowNull: false
+      },
+      cannon_data: {
+        type: DataTypes.STRING(1000)
       }
     }, {
       sequelize,

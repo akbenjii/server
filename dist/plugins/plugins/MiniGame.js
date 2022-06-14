@@ -18,7 +18,8 @@ class MiniGame extends _Plugin.default {
       'game_over': this.gameOver,
       'end_ruffle_mingame': this.endRuffleMinigame,
       'check_legit': this.checkLegit,
-      'place_counter': this.placeCounter
+      'place_counter': this.placeCounter,
+      'set_cannon_data': this.setCannonData
     };
     this.defaultScoreGames = [904, 905, 906, 912, 916, 917, 918, 919, 950, 952];
   }
@@ -188,6 +189,12 @@ class MiniGame extends _Plugin.default {
     if (user.waddle.game = 'four') {
       user.waddle.placeCounter(args, user);
     }
+  }
+
+  setCannonData(args, user) {
+    user.update({
+      cannon_data: args.data
+    });
   }
 
 }

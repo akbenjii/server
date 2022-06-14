@@ -36,8 +36,9 @@ class SledInstance extends _WaddleInstance.default {
       };
     });
 
-    for (let user in this.users) {
-      this.users[user].sledrace = this;
+    for (let user of this.users) {
+      if (!user) return console.error("User not found");
+      user.sledrace = this;
     }
 
     this.userInfo = users;

@@ -32,6 +32,7 @@ class Join extends _Plugin.default {
       stampbookClasp: user.data.stampbookClasp,
       stampbookColor: user.data.stampbookColor,
       stampbookPattern: user.data.stampbookPattern,
+      cannonData: user.data.cannon_data,
       buddies: user.buddy.list,
       ignores: user.ignore.list,
       inventory: user.inventory.list,

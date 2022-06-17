@@ -55,10 +55,10 @@ export default class Get extends Plugin {
 
     getPin(args, user) {
         user.send('get_pin', {
-            id: 582,
-            room: 400,
-            x: 840,
-            y: 980
+            id: null,
+            room: null,
+            x: null,
+            y: null
         })
     }
 

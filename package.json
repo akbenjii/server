@@ -1,6 +1,6 @@
 {
   "name": "cpforever-server",
-  "version": "1.4.1-beta",
+  "version": "1.4.2-beta",
   "description": "A server for https://github.com/cpforever/client/",
   "scripts": {
     "dev": "babel-watch ./src/World.js Login Blizzard Snowball",
@@ -40,7 +40,7 @@
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
-    "perspective-api-client": "^3.1.0",
+    "perspective-api-client": "^1.1.0",
     "pm2": "^5.1.2",
     "profane-words": "^1.4.0",
     "rate-limiter-flexible": "^2.2.1",

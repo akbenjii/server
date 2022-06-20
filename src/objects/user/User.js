@@ -43,6 +43,7 @@ export default class User {
     }
 
     get string() {
+
         return {
             id: this.data.id,
             username: this.data.username,
@@ -62,6 +63,7 @@ export default class User {
             rank: this.data.rank,
             stealthMode: this.data.stealthMode,
             username_approved:  this.data.username_approved,
+            puffle: this.data.walking
         }
     }
 

@@ -143,6 +143,10 @@ export default class Users extends Sequelize.Model {
                 },
                 cannon_data: {
                     type: DataTypes.STRING(1000),
+                },
+                walking: {
+                    type: DataTypes.INTEGER(11),
+                    allowNull: false
                 }
             },
             { sequelize, timestamps: false, tableName: 'users' }

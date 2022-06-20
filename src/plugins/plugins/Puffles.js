@@ -8,7 +8,9 @@ export default class Puffles extends Plugin {
         this.events = {
             'adopt_puffle': this.adoptPuffle,
             'get_puffles': this.getPuffles,
-            'get_wellbeing': this.getWellbeing
+            'get_wellbeing': this.getWellbeing,
+            'stop_walking': this.stopWalking,
+            'get_puffle_color': this.getPuffleColor,
         }
     }
 
@@ -48,4 +50,25 @@ export default class Puffles extends Plugin {
         }
     }
 
+    async stopWalking(args, user) {
+        if (user.data.puffle !== 0){
+            user.data.puffle = 0
+            user.update({ walking: user.data.puffle})
+            user.room.send(user, 'stop_walking', {user: user.data.id}, [])
+        } 
+    }
+
+    async getPuffleColor(args, user) {
+        if (!args.puffle) {
+            return
+        }
+        let puffleId = args.puffle
+        let puffleColor = await this.db.getPuffleColor(puffleId)
+        if (puffleColor) {
+            user.send('get_puffle_color', {
+                penguinId: args.penguinId,
+                color: puffleColor.color
+            })
+        }
+    }
 }

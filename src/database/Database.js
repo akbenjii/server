@@ -391,6 +391,15 @@ export default class Database {
         })
     }
 
+    async getPuffleColor (puffleId) {
+        return await this.findOne('userPuffles', {
+            where: {
+                id: puffleId
+            },
+            attributes: ['color']
+        })
+    }
+
     async getReleasedItems(user) {
         let releasedItems = await this.findAll('items', {
             where: {

@@ -11,6 +11,7 @@ export default class Puffles extends Plugin {
             'get_wellbeing': this.getWellbeing,
             'stop_walking': this.stopWalking,
             'get_puffle_color': this.getPuffleColor,
+            'walk_puffle': this.walkPuffle
         }
     }
 
@@ -51,11 +52,19 @@ export default class Puffles extends Plugin {
     }
 
     async stopWalking(args, user) {
-        if (user.data.puffle !== 0){
-            user.data.puffle = 0
-            user.update({ walking: user.data.puffle})
+        if (user.data.walking !== 0){
+            user.data.walking = 0
+            user.update({ walking: user.data.walking})
             user.room.send(user, 'stop_walking', {user: user.data.id}, [])
         } 
+    }
+
+    async walkPuffle(args, user) {
+        if (args.puffle !== 0){
+            user.data.walking = args.puffle
+            user.update({ walking: user.data.walking})
+            user.room.send(user, 'walk_puffle', {user: user.data.id, puffle: args.puffle}, [])
+        }
     }
 
     async getPuffleColor(args, user) {

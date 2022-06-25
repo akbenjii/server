@@ -149,6 +149,10 @@ class Users extends _sequelize.default.Model {
       },
       cannon_data: {
         type: DataTypes.STRING(1000)
+      },
+      walking: {
+        type: DataTypes.INTEGER(11),
+        allowNull: false
       }
     }, {
       sequelize,

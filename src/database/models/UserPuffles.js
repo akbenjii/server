@@ -25,19 +25,23 @@ export default class UserPuffles extends Sequelize.Model {
             },
             food: {
                 type: DataTypes.INTEGER(11),
-                allowNull: false
+                allowNull: false,
+                defaultValue: 100
             },
             play: {
                 type: DataTypes.INTEGER(11),
-                allowNull: false
+                allowNull: false,
+                defaultValue: 100
             },
             rest: {
                 type: DataTypes.INTEGER(11),
-                allowNull: false
+                allowNull: false,
+                defaultValue: 100
             },
             clean: {
                 type: DataTypes.INTEGER(11),
-                allowNull: false
+                allowNull: false,
+                defaultValue: 100
             }
         }, {
             sequelize,

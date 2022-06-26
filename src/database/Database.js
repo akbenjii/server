@@ -400,6 +400,34 @@ export default class Database {
         })
     }
 
+    async getPuffleCount(userId) {
+        let puffles = await this.findAll('userPuffles', {
+            where: {
+                userId: userId
+            },
+            attributes: ['id']
+        })
+        return puffles.length
+    }
+
+    async getPuffleCost(puffleId) {
+        return await this.findOne('puffles', {
+            where: {
+                id: puffleId
+            },
+            attributes: ['cost']
+        })
+    }
+
+    async adoptPuffle(userId, type, name) {
+        let puffle = await this.userPuffles.create({
+            userId: userId,
+            color: type,
+            name: name
+        })
+        return puffle
+    }
+
     async getReleasedItems(user) {
         let releasedItems = await this.findAll('items', {
             where: {

@@ -46,7 +46,8 @@ export default class Puffles extends Plugin {
                 clean: wellbeing.clean,
                 food: wellbeing.food,
                 play: wellbeing.play,
-                rest: wellbeing.rest
+                rest: wellbeing.rest,
+                name: wellbeing.name
             })
         }
     }

@@ -387,7 +387,7 @@ export default class Database {
             where: {
                 id: puffleId
             },
-            attributes: ['food', 'play', 'rest', 'clean']
+            attributes: ['food', 'play', 'rest', 'clean', 'name']
         })
     }
 

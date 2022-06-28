@@ -115,7 +115,7 @@ export default class User {
     }
 
     updateCoins(coins) {
-        this.data.coins += coins
+        this.data.coins += parseInt(coins)
         this.update({ coins: this.data.coins })
 
 

@@ -40,6 +40,8 @@ export default class User {
         setInterval(() => {
             this.timePlayed++
         }, 1000)
+
+        this.partyData = {}
     }
 
     get string() {

@@ -19,7 +19,11 @@ export default class Actions extends Plugin {
         user.y = args.y
         user.frame = 1
 
-        user.room.send(user, 'send_position', { id: user.data.id, x: args.x, y: args.y })
+        user.room.send(user, 'send_position', {
+            id: user.data.id,
+            x: args.x,
+            y: args.y
+        })
     }
 
     sendFrame(args, user) {
@@ -29,19 +33,38 @@ export default class Actions extends Plugin {
             user.frame = 1
         }
 
-        user.room.send(user, 'send_frame', { id: user.data.id, frame: args.frame, set: args.set })
+        user.room.send(user, 'send_frame', {
+            id: user.data.id,
+            frame: args.frame,
+            set: args.set
+        })
     }
 
     snowball(args, user) {
         user.snowballsThrownThisSession++
-        user.room.send(user, 'snowball', { id: user.data.id, x: args.x, y: args.y })
+        user.room.send(user, 'snowball', {
+            id: user.data.id,
+            x: args.x,
+            y: args.y
+        })
     }
 
-    stampEarned(args, user) {
+    async stampEarned(args, user) {
+        args.stamp = parseInt(args.stamp)
         if (user.stamps.includes(args.stamp)) {
-            return
+            return user.send('error', {
+                error: 'You already have this stamp'
+            })
         }
-        user.stamps.add(args.stamp)
+        let stamp = await user.stamps.add(args.stamp)
+        if (!stamp) {
+            return user.send('error', {
+                error: 'Could not add stamp'
+            })
+        }
+        user.send('stamp_earned', {
+            stamp: args.stamp
+        })
     }
 
     saveStampbook(args, user) {

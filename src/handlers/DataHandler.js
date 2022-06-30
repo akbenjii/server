@@ -13,6 +13,8 @@ export default class DataHandler {
         this.config = config
         this.discord = discord
 
+        this.partyData = {}
+
         this.usersById = {}
         this.maxUsers = config.worlds[id].maxUsers
 

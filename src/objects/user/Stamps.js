@@ -16,12 +16,12 @@ export default class Stamps {
      *
      * @param {number} item - Item ID
      */
-     add(stamp) {
+     async add(stamp) {
         this.list.push(stamp)
 
         // Db query
         try {
-            this.db.userStamps.create({ userId: this.user.data.id, stampId: stamp })
+            return await this.db.userStamps.create({ userId: this.user.data.id, stampId: stamp })
         } catch (error) {
             console.log(error)
         }

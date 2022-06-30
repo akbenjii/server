@@ -117,6 +117,35 @@ export default class MiniGame extends Plugin {
                 }
             }
             user.send('end_ruffle_mingame', { coins: user.data.coins, game: args.game, coinsEarned: args.coins, stamps: user.stamps.list })
+
+            if (user.partyData.team && this.handler.partyData.games.includes(args.game.toLowerCase())) {
+
+                let data = await this.db.submitScore(user.data.id, args.game.toLowerCase(), args.coins)
+
+                if (data) {
+                    let partyCompletion = await this.db.getPartyCompletion(user.data.id, "PenguinGames0722")
+                    user.send('get_party_completion', partyCompletion)
+                }
+
+                // update totals
+
+                if (user.partyData.team == "blue") {
+                    if (this.handler.partyData.blueTotal) {
+                        this.handler.partyData.blueTotal += args.coins
+                    }
+                    else {
+                        this.handler.partyData.blueTotal = args.coins
+                    }
+                }
+                else if (user.partyData.team == "red") {
+                    if (this.handler.partyData.redTotal) {
+                        this.handler.partyData.redTotal += args.coins
+                    }
+                    else {
+                        this.handler.partyData.redTotal = args.coins
+                    }
+                }
+            }
         }
         else {
             user.send('error', { error: 'There was an error adding your coins' })

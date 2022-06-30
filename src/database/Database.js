@@ -252,7 +252,7 @@ export default class Database {
     async getWorldPopulations() {
         return await this.getCrumb('worlds')
     }
-    
+
     async getUnverifedUsers(userId) {
         return await this.findAll('users', {
             where: {
@@ -290,7 +290,7 @@ export default class Database {
             return closeMatch
         }
     }
-    
+
     async addCoins(userID, coins) {
         let user = await this.getUserById(userID)
 
@@ -391,7 +391,7 @@ export default class Database {
         })
     }
 
-    async getPuffleColor (puffleId) {
+    async getPuffleColor(puffleId) {
         return await this.findOne('userPuffles', {
             where: {
                 id: puffleId
@@ -465,7 +465,8 @@ export default class Database {
                     [Op.gt]: user.data.joinTime
                 },
                 type: 8
-        }})
+            }
+        })
 
         let releasedPinIDs = []
 
@@ -582,7 +583,12 @@ export default class Database {
                     id: blueTeamMembers[x].penguinId
                 },
                 attributes: ['username']
-            })).username
+            }))
+            if (!username) {
+                continue
+            } else {
+                username = username.username
+            }
             let score = (await this.findOne('partyCompletion', {
                 where: {
                     penguinId: blueTeamMembers[x].penguinId,
@@ -590,7 +596,12 @@ export default class Database {
                     info: game
                 },
                 attributes: ['value']
-            })).value
+            }))
+            if (!score) {
+                continue
+            } else {
+                score = score.value
+            }
             blueTeamScores.push([username, score])
             blueTotal = parseInt(blueTotal) + parseInt(score)
         }
@@ -600,7 +611,12 @@ export default class Database {
                     id: redTeamMembers[x].penguinId
                 },
                 attributes: ['username']
-            })).username
+            }))
+            if (!username) {
+                continue
+            } else {
+                username = username.username
+            }
             let score = (await this.findOne('partyCompletion', {
                 where: {
                     penguinId: redTeamMembers[x].penguinId,
@@ -608,18 +624,36 @@ export default class Database {
                     info: game
                 },
                 attributes: ['value']
-            })).value
+            }))
+            if (!score) {
+                continue
+            } else {
+                score = score.value
+            }
             redTeamScores.push([username, score])
             redTotal = parseInt(redTotal) + parseInt(score)
         }
-        blueTeamScores.sort(function (a, b) { return b[1] - a[1] })
-        redTeamScores.sort(function (a, b) { return b[1] - a[1] })
+        blueTeamScores.sort(function (a, b) {
+            return b[1] - a[1]
+        })
+        redTeamScores.sort(function (a, b) {
+            return b[1] - a[1]
+        })
         if (blueTeamScores.length > 5) blueTeamScores = blueTeamScores.slice(0, 5)
         if (redTeamScores.length > 5) redTeamScores = redTeamScores.slice(0, 5)
-        return { leaderboard: game, blueTotal: blueTotal, blueLeaderboard: blueTeamScores, redTotal: redTotal, redLeaderboard: redTeamScores }
+        return {
+            leaderboard: game,
+            blueTotal: blueTotal,
+            blueLeaderboard: blueTeamScores,
+            redTotal: redTotal,
+            redLeaderboard: redTeamScores
+        }
     }
 
     async setTotals(handler) {
+        let blueTeamScores = []
+        let redTeamScores = []
+
         let blueTotal = 0
         let redTotal = 0
 
@@ -639,35 +673,89 @@ export default class Database {
             },
             attributes: ['penguinId']
         })
-        for (var game of handler.partyData.games) {
-            for (var x in blueTeamMembers) {
-                let score = await this.findOne('partyCompletion', {
+        for (var x in blueTeamMembers) {
+            let scoreTotal = 0
+            let username = (await this.findOne('users', {
+                where: {
+                    id: blueTeamMembers[x].penguinId
+                },
+                attributes: ['username']
+            }))
+            if (!username) {
+                continue
+            } else {
+                username = username.username
+            }
+
+            for (var game of handler.partyData.games) {
+                let score = (await this.findOne('partyCompletion', {
                     where: {
                         penguinId: blueTeamMembers[x].penguinId,
                         party: "PenguinGames0722",
                         info: game
                     },
                     attributes: ['value']
-                })
-                if (!score) continue
-                blueTotal = parseInt(blueTotal) + parseInt(score.value)
+                }))
+                if (!score) {
+                    continue
+                } else {
+                    score = score.value
+                }
+                scoreTotal = parseInt(scoreTotal) + parseInt(score)
+                
             }
-            for (var x in redTeamMembers) {
-                let score = await this.findOne('partyCompletion', {
+
+            blueTeamScores.push([username, scoreTotal])
+            blueTotal = parseInt(blueTotal) + parseInt(scoreTotal)
+        }
+        for (var x in redTeamMembers) {
+            let scoreTotal = 0
+            let username = (await this.findOne('users', {
+                where: {
+                    id: redTeamMembers[x].penguinId
+                },
+                attributes: ['username']
+            }))
+            if (!username) {
+                continue
+            } else {
+                username = username.username
+            }
+
+            for (var game of handler.partyData.games) {
+                let score = (await this.findOne('partyCompletion', {
                     where: {
                         penguinId: redTeamMembers[x].penguinId,
                         party: "PenguinGames0722",
                         info: game
                     },
                     attributes: ['value']
-                })
-                if (!score) continue
-                redTotal = parseInt(redTotal) + parseInt(score.value)
+                }))
+                if (!score) {
+                    continue
+                } else {
+                    score = score.value
+                }
+                scoreTotal = parseInt(scoreTotal) + parseInt(score)
             }
+            redTeamScores.push([username, scoreTotal])
+            redTotal = parseInt(redTotal) + parseInt(scoreTotal)
         }
-        
+
         handler.partyData.blueTotal = blueTotal
         handler.partyData.redTotal = redTotal
+
+        blueTeamScores.sort(function (a, b) {
+            return b[1] - a[1]
+        })
+        redTeamScores.sort(function (a, b) {
+            return b[1] - a[1]
+        })
+        if (blueTeamScores.length > 5) blueTeamScores = blueTeamScores.slice(0, 5)
+        if (redTeamScores.length > 5) redTeamScores = redTeamScores.slice(0, 5)
+
+        handler.partyData.blueLeaderboard = blueTeamScores
+        handler.partyData.redLeaderboard = redTeamScores
     }
 
     /*========== Helper functions ==========*/

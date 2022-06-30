@@ -158,20 +158,20 @@ export default class MiniGame extends Plugin {
         }
     }
 
-    gameOver(args, user) {
+    async gameOver(args, user) {
         if (!user.room.game) {
             return
         }
 
-        let coins = this.getCoinsEarned(user, args.score)
+        let coins = await this.getCoinsEarned(user, args.score)
         user.updateCoins(coins)
 
         user.sledrace.setFinished(user.data.username, coins)
     }
 
-    getCoinsEarned(user, score) {
+    async getCoinsEarned(user, score) {
         if (user.inWaddleGame) {
-            return user.waddle.getPayout(user, score)
+            return await user.waddle.getPayout(user, score)
 
         } else if (user.room.id in this.defaultScoreGames) {
             return score
@@ -181,9 +181,9 @@ export default class MiniGame extends Plugin {
         }
     }
 
-    placeCounter(args, user) {
+    async placeCounter(args, user) {
         if (user.waddle.game = 'four') {
-            user.waddle.placeCounter(args, user)
+           await user.waddle.placeCounter(args, user)
         }
     }
 

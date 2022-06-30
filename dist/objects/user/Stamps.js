@@ -23,11 +23,11 @@ class Stamps {
    */
 
 
-  add(stamp) {
+  async add(stamp) {
     this.list.push(stamp); // Db query
 
     try {
-      this.db.userStamps.create({
+      return await this.db.userStamps.create({
         userId: this.user.data.id,
         stampId: stamp
       });

@@ -18,13 +18,29 @@ class Puffles extends _Plugin.default {
       'get_wellbeing': this.getWellbeing,
       'stop_walking': this.stopWalking,
       'get_puffle_color': this.getPuffleColor,
-      'walk_puffle': this.walkPuffle
+      'walk_puffle': this.walkPuffle,
+      'get_puffle_count': this.getPuffleCount
     };
   }
 
-  adoptPuffle(args, user) {
-    let type = args.puffle;
-    let name = args.name;
+  async adoptPuffle(args, user) {
+    let type = args.type;
+    let name = args.name.charAt(0).toUpperCase() + args.name.slice(1);
+    let cost = (await this.db.getPuffleCost(type)).dataValues.cost;
+
+    if (cost > user.data.coins) {
+      user.send('error', {
+        error: 'You need more coins.'
+      });
+      return;
+    }
+
+    user.updateCoins(-cost);
+    let puffle = await this.db.adoptPuffle(user.data.id, type, name);
+    user.send('adopt_puffle', {
+      puffle: puffle.id,
+      coins: user.data.coins
+    });
   }
 
   async getPuffles(args, user) {
@@ -57,7 +73,8 @@ class Puffles extends _Plugin.default {
         clean: wellbeing.clean,
         food: wellbeing.food,
         play: wellbeing.play,
-        rest: wellbeing.rest
+        rest: wellbeing.rest,
+        name: wellbeing.name
       });
     }
   }
@@ -99,6 +116,20 @@ class Puffles extends _Plugin.default {
       user.send('get_puffle_color', {
         penguinId: args.penguinId,
         color: puffleColor.color
+      });
+    }
+  }
+
+  async getPuffleCount(args, user) {
+    if (!user.data.id) {
+      return;
+    }
+
+    let puffleCount = await this.db.getPuffleCount(user.data.id);
+
+    if (puffleCount) {
+      user.send('get_puffle_count', {
+        count: puffleCount
       });
     }
   }

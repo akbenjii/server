@@ -368,7 +368,7 @@ class Database {
       where: {
         id: puffleId
       },
-      attributes: ['food', 'play', 'rest', 'clean']
+      attributes: ['food', 'play', 'rest', 'clean', 'name']
     });
   }
 
@@ -379,6 +379,34 @@ class Database {
       },
       attributes: ['color']
     });
+  }
+
+  async getPuffleCount(userId) {
+    let puffles = await this.findAll('userPuffles', {
+      where: {
+        userId: userId
+      },
+      attributes: ['id']
+    });
+    return puffles.length;
+  }
+
+  async getPuffleCost(puffleId) {
+    return await this.findOne('puffles', {
+      where: {
+        id: puffleId
+      },
+      attributes: ['cost']
+    });
+  }
+
+  async adoptPuffle(userId, type, name) {
+    let puffle = await this.userPuffles.create({
+      userId: userId,
+      color: type,
+      name: name
+    });
+    return puffle;
   }
 
   async getReleasedItems(user) {
@@ -439,6 +467,289 @@ class Database {
     }
 
     return releasedPinIDs;
+  }
+
+  async getTeam(userId) {
+    let team = await this.findOne('partyCompletion', {
+      where: {
+        penguinId: userId,
+        party: "PenguinGames0722",
+        info: "team"
+      },
+      attributes: ['value']
+    });
+    if (team) return team.value;
+    return undefined;
+  }
+
+  async setTeam(userId, team) {
+    this.partyCompletion.create({
+      penguinId: userId,
+      party: "PenguinGames0722",
+      info: "team",
+      value: team
+    });
+  }
+
+  async getPartyCompletion(userId, party) {
+    let completion = await this.findAll('partyCompletion', {
+      where: {
+        penguinId: userId,
+        party: party
+      },
+      attributes: ['info', 'value']
+    });
+    return this.arrayToObject(completion, 'info', 'value');
+  }
+
+  async submitScore(userId, game, score) {
+    let data;
+    let scoreEntry = await this.findOne('partyCompletion', {
+      where: {
+        penguinId: userId,
+        party: "PenguinGames0722",
+        info: game
+      },
+      attributes: ['value']
+    });
+
+    if (scoreEntry) {
+      data = await this.partyCompletion.update({
+        value: parseInt(scoreEntry.value) + score
+      }, {
+        where: {
+          penguinId: userId,
+          party: "PenguinGames0722",
+          info: game
+        }
+      });
+    } else {
+      data = await this.partyCompletion.create({
+        penguinId: userId,
+        party: "PenguinGames0722",
+        info: game,
+        value: score
+      });
+    }
+
+    return data;
+  }
+
+  async getLeaderboardData(game) {
+    let blueTeamScores = [];
+    let redTeamScores = [];
+    let blueTotal = 0;
+    let redTotal = 0;
+    let blueTeamMembers = await this.findAll('partyCompletion', {
+      where: {
+        party: "PenguinGames0722",
+        info: "team",
+        value: "blue"
+      },
+      attributes: ['penguinId']
+    });
+    let redTeamMembers = await this.findAll('partyCompletion', {
+      where: {
+        party: "PenguinGames0722",
+        info: "team",
+        value: "red"
+      },
+      attributes: ['penguinId']
+    });
+
+    for (var x in blueTeamMembers) {
+      let username = await this.findOne('users', {
+        where: {
+          id: blueTeamMembers[x].penguinId
+        },
+        attributes: ['username']
+      });
+
+      if (!username) {
+        continue;
+      } else {
+        username = username.username;
+      }
+
+      let score = await this.findOne('partyCompletion', {
+        where: {
+          penguinId: blueTeamMembers[x].penguinId,
+          party: "PenguinGames0722",
+          info: game
+        },
+        attributes: ['value']
+      });
+
+      if (!score) {
+        continue;
+      } else {
+        score = score.value;
+      }
+
+      blueTeamScores.push([username, score]);
+      blueTotal = parseInt(blueTotal) + parseInt(score);
+    }
+
+    for (var x in redTeamMembers) {
+      let username = await this.findOne('users', {
+        where: {
+          id: redTeamMembers[x].penguinId
+        },
+        attributes: ['username']
+      });
+
+      if (!username) {
+        continue;
+      } else {
+        username = username.username;
+      }
+
+      let score = await this.findOne('partyCompletion', {
+        where: {
+          penguinId: redTeamMembers[x].penguinId,
+          party: "PenguinGames0722",
+          info: game
+        },
+        attributes: ['value']
+      });
+
+      if (!score) {
+        continue;
+      } else {
+        score = score.value;
+      }
+
+      redTeamScores.push([username, score]);
+      redTotal = parseInt(redTotal) + parseInt(score);
+    }
+
+    blueTeamScores.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    redTeamScores.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    if (blueTeamScores.length > 5) blueTeamScores = blueTeamScores.slice(0, 5);
+    if (redTeamScores.length > 5) redTeamScores = redTeamScores.slice(0, 5);
+    return {
+      leaderboard: game,
+      blueTotal: blueTotal,
+      blueLeaderboard: blueTeamScores,
+      redTotal: redTotal,
+      redLeaderboard: redTeamScores
+    };
+  }
+
+  async setTotals(handler) {
+    let blueTeamScores = [];
+    let redTeamScores = [];
+    let blueTotal = 0;
+    let redTotal = 0;
+    let blueTeamMembers = await this.findAll('partyCompletion', {
+      where: {
+        party: "PenguinGames0722",
+        info: "team",
+        value: "blue"
+      },
+      attributes: ['penguinId']
+    });
+    let redTeamMembers = await this.findAll('partyCompletion', {
+      where: {
+        party: "PenguinGames0722",
+        info: "team",
+        value: "red"
+      },
+      attributes: ['penguinId']
+    });
+
+    for (var x in blueTeamMembers) {
+      let scoreTotal = 0;
+      let username = await this.findOne('users', {
+        where: {
+          id: blueTeamMembers[x].penguinId
+        },
+        attributes: ['username']
+      });
+
+      if (!username) {
+        continue;
+      } else {
+        username = username.username;
+      }
+
+      for (var game of handler.partyData.games) {
+        let score = await this.findOne('partyCompletion', {
+          where: {
+            penguinId: blueTeamMembers[x].penguinId,
+            party: "PenguinGames0722",
+            info: game
+          },
+          attributes: ['value']
+        });
+
+        if (!score) {
+          continue;
+        } else {
+          score = score.value;
+        }
+
+        scoreTotal = parseInt(scoreTotal) + parseInt(score);
+      }
+
+      blueTeamScores.push([username, scoreTotal]);
+      blueTotal = parseInt(blueTotal) + parseInt(scoreTotal);
+    }
+
+    for (var x in redTeamMembers) {
+      let scoreTotal = 0;
+      let username = await this.findOne('users', {
+        where: {
+          id: redTeamMembers[x].penguinId
+        },
+        attributes: ['username']
+      });
+
+      if (!username) {
+        continue;
+      } else {
+        username = username.username;
+      }
+
+      for (var game of handler.partyData.games) {
+        let score = await this.findOne('partyCompletion', {
+          where: {
+            penguinId: redTeamMembers[x].penguinId,
+            party: "PenguinGames0722",
+            info: game
+          },
+          attributes: ['value']
+        });
+
+        if (!score) {
+          continue;
+        } else {
+          score = score.value;
+        }
+
+        scoreTotal = parseInt(scoreTotal) + parseInt(score);
+      }
+
+      redTeamScores.push([username, scoreTotal]);
+      redTotal = parseInt(redTotal) + parseInt(scoreTotal);
+    }
+
+    handler.partyData.blueTotal = blueTotal;
+    handler.partyData.redTotal = redTotal;
+    blueTeamScores.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    redTeamScores.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    if (blueTeamScores.length > 5) blueTeamScores = blueTeamScores.slice(0, 5);
+    if (redTeamScores.length > 5) redTeamScores = redTeamScores.slice(0, 5);
+    handler.partyData.blueLeaderboard = blueTeamScores;
+    handler.partyData.redLeaderboard = redTeamScores;
   }
   /*========== Helper functions ==========*/
 

@@ -152,6 +152,30 @@ class MiniGame extends _Plugin.default {
         coinsEarned: args.coins,
         stamps: user.stamps.list
       });
+
+      if (user.partyData.team && this.handler.partyData.games.includes(args.game.toLowerCase())) {
+        let data = await this.db.submitScore(user.data.id, args.game.toLowerCase(), args.coins);
+
+        if (data) {
+          let partyCompletion = await this.db.getPartyCompletion(user.data.id, "PenguinGames0722");
+          user.send('get_party_completion', partyCompletion);
+        } // update totals
+
+
+        if (user.partyData.team == "blue") {
+          if (this.handler.partyData.blueTotal) {
+            this.handler.partyData.blueTotal += args.coins;
+          } else {
+            this.handler.partyData.blueTotal = args.coins;
+          }
+        } else if (user.partyData.team == "red") {
+          if (this.handler.partyData.redTotal) {
+            this.handler.partyData.redTotal += args.coins;
+          } else {
+            this.handler.partyData.redTotal = args.coins;
+          }
+        }
+      }
     } else {
       user.send('error', {
         error: 'There was an error adding your coins'
@@ -165,19 +189,19 @@ class MiniGame extends _Plugin.default {
     }
   }
 
-  gameOver(args, user) {
+  async gameOver(args, user) {
     if (!user.room.game) {
       return;
     }
 
-    let coins = this.getCoinsEarned(user, args.score);
+    let coins = await this.getCoinsEarned(user, args.score);
     user.updateCoins(coins);
     user.sledrace.setFinished(user.data.username, coins);
   }
 
-  getCoinsEarned(user, score) {
+  async getCoinsEarned(user, score) {
     if (user.inWaddleGame) {
-      return user.waddle.getPayout(user, score);
+      return await user.waddle.getPayout(user, score);
     } else if (user.room.id in this.defaultScoreGames) {
       return score;
     } else {
@@ -185,9 +209,9 @@ class MiniGame extends _Plugin.default {
     }
   }
 
-  placeCounter(args, user) {
+  async placeCounter(args, user) {
     if (user.waddle.game = 'four') {
-      user.waddle.placeCounter(args, user);
+      await user.waddle.placeCounter(args, user);
     }
   }
 

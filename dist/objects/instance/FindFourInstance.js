@@ -28,7 +28,7 @@ class FindFourInstance extends _WaddleInstance.default {
     super.init();
   }
 
-  placeCounter(args, user) {
+  async placeCounter(args, user) {
     if (this.turn !== user.data.id) return;
     this.map[args.column][args.row] = user.data.id;
     this.send('place_counter', {
@@ -59,6 +59,29 @@ class FindFourInstance extends _WaddleInstance.default {
             coinsEarned: 25,
             stamps: this.users[x].stamps.list
           });
+
+          if (this.users[x].partyData.team) {
+            let data = await this.users[x].db.submitScore(this.users[x].data.id, "four", 25);
+
+            if (data) {
+              let partyCompletion = await this.users[x].db.getPartyCompletion(this.users[x].data.id, "PenguinGames0722");
+              user.send('get_party_completion', partyCompletion);
+            }
+
+            if (this.users[x].partyData.team == "blue") {
+              if (this.users[x].handler.partyData.blueTotal) {
+                this.users[x].handler.partyData.blueTotal += 25;
+              } else {
+                this.users[x].handler.partyData.blueTotal = 25;
+              }
+            } else if (this.users[x].partyData.team == "red") {
+              if (this.users[x].handler.partyData.redTotal) {
+                this.users[x].handler.partyData.redTotal += 25;
+              } else {
+                this.users[x].handler.partyData.redTotal = 25;
+              }
+            }
+          }
         } else {
           this.users[x].updateCoins(10);
           this.users[x].send('end_ruffle_mingame', {
@@ -67,6 +90,29 @@ class FindFourInstance extends _WaddleInstance.default {
             coinsEarned: 10,
             stamps: this.users[x].stamps.list
           });
+
+          if (this.users[x].partyData.team) {
+            let data = await this.users[x].db.submitScore(this.users[x].data.id, "four", 10);
+
+            if (data) {
+              let partyCompletion = await this.users[x].db.getPartyCompletion(this.users[x].data.id, "PenguinGames0722");
+              user.send('get_party_completion', partyCompletion);
+            }
+
+            if (this.users[x].partyData.team == "blue") {
+              if (this.users[x].handler.partyData.blueTotal) {
+                this.users[x].handler.partyData.blueTotal += 10;
+              } else {
+                this.users[x].handler.partyData.blueTotal = 10;
+              }
+            } else if (this.users[x].partyData.team == "red") {
+              if (this.users[x].handler.partyData.redTotal) {
+                this.users[x].handler.partyData.redTotal += 10;
+              } else {
+                this.users[x].handler.partyData.redTotal = 10;
+              }
+            }
+          }
         }
 
         this.waddle.remove(this.users[x]);
@@ -97,6 +143,30 @@ class FindFourInstance extends _WaddleInstance.default {
             coinsEarned: 10,
             stamps: this.users[x].stamps.list
           });
+
+          if (this.users[x].partyData.team) {
+            let data = await this.users[x].db.submitScore(this.users[x].data.id, "four", 10);
+
+            if (data) {
+              let partyCompletion = await this.users[x].db.getPartyCompletion(this.users[x].data.id, "PenguinGames0722");
+              user.send('get_party_completion', partyCompletion);
+            }
+
+            if (this.users[x].partyData.team == "blue") {
+              if (this.users[x].handler.partyData.blueTotal) {
+                this.users[x].handler.partyData.blueTotal += 10;
+              } else {
+                this.users[x].handler.partyData.blueTotal = 10;
+              }
+            } else if (this.users[x].partyData.team == "red") {
+              if (this.users[x].handler.partyData.redTotal) {
+                this.users[x].handler.partyData.redTotal += 10;
+              } else {
+                this.users[x].handler.partyData.redTotal = 10;
+              }
+            }
+          }
+
           this.waddle.remove(this.users[x]);
         }
 
@@ -150,15 +220,15 @@ class FindFourInstance extends _WaddleInstance.default {
   checkDiagonalMatch(column, row, user) {
     let adjacent = 0;
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = -7; i < 7; i++) {
       if (!this.map[column + i]) {
         adjacent = 0;
-        break;
+        continue;
       }
 
       if (!this.map[column + i][row - i]) {
         adjacent = 0;
-        break;
+        continue;
       }
 
       if (this.map[column + i][row - i] === user) {
@@ -172,15 +242,15 @@ class FindFourInstance extends _WaddleInstance.default {
       }
     }
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = -7; i < 7; i++) {
       if (!this.map[column - i]) {
         adjacent = 0;
-        break;
+        continue;
       }
 
       if (!this.map[column - i][row - i]) {
         adjacent = 0;
-        break;
+        continue;
       }
 
       if (this.map[column - i][row - i] === user) {

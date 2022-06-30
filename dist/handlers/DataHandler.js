@@ -22,6 +22,7 @@ class DataHandler {
     this.db = db;
     this.config = config;
     this.discord = discord;
+    this.partyData = {};
     this.usersById = {};
     this.maxUsers = config.worlds[id].maxUsers;
     this.openIgloos = new _OpenIgloos.default();

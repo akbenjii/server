@@ -19,7 +19,7 @@ export default class Party extends Plugin {
 
     setTotals() {
         this.db.setTotals(this.handler)
-        setTimeout(() => this.setTotals, 60000)
+        setTimeout(() => this.setTotals(), 60000)
     }
 
     async pickTeam(args, user) {
@@ -46,7 +46,6 @@ export default class Party extends Plugin {
     }
 
     getTeamScores(args, user) {
-        console.log(this.handler.partyData.blueTotal, this.handler.partyData.redTotal)
         user.send('get_team_scores', { blue: this.handler.partyData.blueTotal, red: this.handler.partyData.redTotal, blueLeaderboard: this.handler.partyData.blueLeaderboard, redLeaderboard: this.handler.partyData.redLeaderboard })
     }
 

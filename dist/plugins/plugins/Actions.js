@@ -55,12 +55,26 @@ class Actions extends _Plugin.default {
     });
   }
 
-  stampEarned(args, user) {
+  async stampEarned(args, user) {
+    args.stamp = parseInt(args.stamp);
+
     if (user.stamps.includes(args.stamp)) {
-      return;
+      return user.send('error', {
+        error: 'You already have this stamp'
+      });
     }
 
-    user.stamps.add(args.stamp);
+    let stamp = await user.stamps.add(args.stamp);
+
+    if (!stamp) {
+      return user.send('error', {
+        error: 'Could not add stamp'
+      });
+    }
+
+    user.send('stamp_earned', {
+      stamp: args.stamp
+    });
   }
 
   saveStampbook(args, user) {

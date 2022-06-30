@@ -10,7 +10,7 @@
         "password": "GJc>za9j+_y~2T?$7DfcjAF,FZaFmu",
         "database": "cpforever",
         "dialect": "mysql",
-        "debug": true
+        "debug": false
 
     },
     "socketio": {

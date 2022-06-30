@@ -140,7 +140,8 @@ class Panel extends _Plugin.default {
       recipient.send('end_ruffle_mingame', {
         coins: recipient.data.coins,
         game: 'Gift from a moderator!',
-        coinsEarned: args.coins
+        coinsEarned: args.coins,
+        stamps: recipient.stamps.list
       });
     } else {
       await this.db.addCoins(args.id, args.coins);

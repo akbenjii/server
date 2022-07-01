@@ -117,12 +117,14 @@ export default class User {
     }
 
     updateCoins(coins) {
-        this.data.coins += parseInt(coins)
-        this.update({ coins: this.data.coins })
-
+        if (!coins) {return}
         if (!this.data.coins || this.data.coins < 0) {
             this.data.coins = 0
         }
+        
+        this.data.coins += parseInt(coins)
+        this.update({ coins: this.data.coins })
+
         
         if (coins > 0) {
             this.data.coinsEarned += coins

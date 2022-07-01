@@ -25,7 +25,7 @@ export default class MiniGame extends Plugin {
     }
 	
     endRuffleMinigame(args, user) {
-        if (!args.coins || args.coins > 0) { return }
+        if (!args.coins || args.coins < 0) { return }
         user.send('check_legit', {game: args.game, coinsEarned: args.coins})
         user.pending = true
         user.pendingCoins = args.coins
@@ -33,7 +33,7 @@ export default class MiniGame extends Plugin {
 
     async checkLegit(args, user) {
 
-        if (!user.pending || !args.coins || args.coins > 0) { return }
+        if (!user.pending || !args.coins || args.coins < 0) { return }
 
         let categoryStamps = []
         let ownedCategoryStamps = []

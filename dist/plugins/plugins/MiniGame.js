@@ -31,7 +31,7 @@ class MiniGame extends _Plugin.default {
   }
 
   endRuffleMinigame(args, user) {
-    if (!args.coins || args.coins > 0) {
+    if (!args.coins || args.coins < 0) {
       return;
     }
 
@@ -44,7 +44,7 @@ class MiniGame extends _Plugin.default {
   }
 
   async checkLegit(args, user) {
-    if (!user.pending || !args.coins || args.coins > 0) {
+    if (!user.pending || !args.coins || args.coins < 0) {
       return;
     }
 

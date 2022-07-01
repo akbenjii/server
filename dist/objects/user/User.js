@@ -125,6 +125,14 @@ class User {
   }
 
   updateCoins(coins) {
+    if (!coins) {
+      return;
+    }
+
+    if (!this.data.coins || this.data.coins < 0) {
+      this.data.coins = 0;
+    }
+
     this.data.coins += parseInt(coins);
     this.update({
       coins: this.data.coins

@@ -31,6 +31,10 @@ class MiniGame extends _Plugin.default {
   }
 
   endRuffleMinigame(args, user) {
+    if (!args.coins || args.coins > 0) {
+      return;
+    }
+
     user.send('check_legit', {
       game: args.game,
       coinsEarned: args.coins
@@ -40,6 +44,10 @@ class MiniGame extends _Plugin.default {
   }
 
   async checkLegit(args, user) {
+    if (!user.pending || !args.coins || args.coins > 0) {
+      return;
+    }
+
     let categoryStamps = [];
     let ownedCategoryStamps = [];
     let category;

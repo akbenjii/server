@@ -758,6 +758,16 @@ export default class Database {
         handler.partyData.redLeaderboard = redTeamScores
     }
 
+    async getPostcards(userId) {
+        let postcards = await this.findAll('userPostcards', {
+            where: {
+                userId: userId
+            },
+            attributes: ['id', 'userId', 'sender', 'time_sent']
+        })
+        return postcards
+    }
+
     /*========== Helper functions ==========*/
 
     findOne(table, options = {}, emptyReturn = null, callback = null) {

@@ -42,10 +42,11 @@ export default class User {
         }, 1000)
 
         this.partyData = {}
+
+        this.setPuffleDecay()
     }
 
     get string() {
-
         return {
             id: this.data.id,
             username: this.data.username,
@@ -105,6 +106,10 @@ export default class User {
 
     setStamps(stamps) {
         this.stamps = new Stamps(this, stamps)
+    }
+
+    setPostcards(postcards) {
+        this.postcards = postcards
     }
 
     setItem(slot, item) {
@@ -186,6 +191,34 @@ export default class User {
         this.closeInactive = setTimeout(() => {
             this.close()
         }, 3600000)
+    }
+
+    async setPuffleDecay() {
+        if (!this.data) return setTimeout(() => this.setPuffleDecay(), 1000)
+        let puffles = await this.db.userPuffles.findAll({ where: { userId: this.data.id } })
+        let loginLength = (new Date()).getTime() - (new Date(this.data.last_login)).getTime()
+        let decay = Math.floor(Math.floor(loginLength / 1000 / 60 / 60 / 24) * 3.5)
+        for (let puffle of puffles) {
+            let food = puffle.dataValues.food - decay
+            let play = puffle.dataValues.play - decay
+            let rest = puffle.dataValues.rest - decay
+            let clean = puffle.dataValues.clean - decay
+            if (play < 0) play = 0
+            if (rest < 0) rest = 0
+            if (clean < 0) clean = 0
+            if (food < 0 || (play + rest + clean) < 0) {
+                await this.db.userPuffles.destroy({ where: { id: puffle.dataValues.id } })
+                continue
+            }
+            this.db.userPuffles.update({
+                food: food,
+                play: play,
+                rest: rest,
+                clean: clean
+            }, { where: { id: puffle.dataValues.id }})
+        }
+        this.data.last_login = new Date()
+        this.update({ last_login: this.data.last_login })
     }
 
 }

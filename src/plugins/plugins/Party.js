@@ -12,9 +12,7 @@ export default class Party extends Plugin {
             'get_leaderboard_data': this.getLeaderboardData,
         }
 
-        this.handler.partyData.party = "PenguinGames0722"
-        this.handler.partyData.games = ["aquagrabber", "astrobarrier", "beancounters", "cartsurfer", "hydrohopper", "icefishing", "jetpackadventure", "pizzatron", "four", "puffleroundup", "sled", "thinice"]
-        this.setTotals()
+        this.handler.partyData.party = null
     }
 
     setTotals() {

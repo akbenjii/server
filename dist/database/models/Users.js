@@ -153,6 +153,10 @@ class Users extends _sequelize.default.Model {
       walking: {
         type: DataTypes.INTEGER(11),
         allowNull: false
+      },
+      last_login: {
+        type: DataTypes.DATE,
+        allowNull: false,
       }
     }, {
       sequelize,

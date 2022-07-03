@@ -147,6 +147,10 @@ export default class Users extends Sequelize.Model {
                 walking: {
                     type: DataTypes.INTEGER(11),
                     allowNull: false
+                },
+                last_login: {
+                    type: DataTypes.DATE,
+                    allowNull: false,
                 }
             },
             { sequelize, timestamps: false, tableName: 'users' }

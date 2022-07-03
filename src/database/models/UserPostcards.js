@@ -23,6 +23,10 @@ export default class UserPostcards extends Sequelize.Model {
                     type: DataTypes.DATE,
                     allowNull: false,
                     defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
+                },
+                details: {
+                    type: DataTypes.STRING(50),
+                    allowNull: true
                 }
             },
             { sequelize, timestamps: false, tableName: 'user_postcards' }

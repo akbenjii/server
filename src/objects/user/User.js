@@ -208,6 +208,53 @@ export default class User {
             if (clean < 0) clean = 0
             if (food < 0 || (play + rest + clean) < 0) {
                 await this.db.userPuffles.destroy({ where: { id: puffle.dataValues.id } })
+                let postcard;
+                switch (puffle.dataValues.color) {
+                    case '0':
+                        postcard = 100
+                        break
+                    case '1':
+                        postcard = 101
+                        break
+                    case '2':
+                        postcard = 102
+                        break
+                    case '3':
+                        postcard = 103
+                        break
+                    case '4':
+                        postcard = 104
+                        break
+                    case '5':
+                        postcard = 105
+                        break
+                    case '6':
+                        postcard = 106
+                        break
+                    case '7':
+                        postcard = 107
+                        break
+                    case '8':
+                        postcard = 108
+                        break
+                    case '9':
+                        postcard = 109
+                        break
+                    case '10':
+                        postcard = 185
+                        break
+                    case '11':
+                        postcard = 238
+                        break
+                    default:
+                        postcard = 100
+                        break
+                }
+                let postcardEntry = await this.db.userPostcards.create({ userId: user.data.id, id: postcard, sender: "Club Penguin Forever", details: puffle.dataValues.name })
+                if (postcardEntry) {
+                    this.postcards = await this.db.getPostcards(this.data.id)
+                    this.send('update_postcards', { postcards: this.postcards })
+                }
                 continue
             }
             this.db.userPuffles.update({

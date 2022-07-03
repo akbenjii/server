@@ -32,6 +32,11 @@ export default class Puffles extends Plugin {
         let puffle = await this.db.adoptPuffle(user.data.id, type, name)
 
         user.send('adopt_puffle', { puffle: puffle.id, coins: user.data.coins })
+        let postcard = await this.db.userPostcards.create({ userId: user.data.id, id: 111, sender: "Club Penguin Forever", details: name })
+        if (postcard) {
+            user.postcards = await this.db.getPostcards(user.data.id)
+            user.send('update_postcards', { postcards: user.postcards })
+        }
     }
 
     async getPuffles(args, user) {

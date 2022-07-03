@@ -763,7 +763,7 @@ export default class Database {
             where: {
                 userId: userId
             },
-            attributes: ['id', 'userId', 'sender', 'time_sent']
+            attributes: ['id', 'userId', 'sender', 'time_sent', 'details']
         })
         return postcards
     }

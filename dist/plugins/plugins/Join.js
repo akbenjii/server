@@ -38,7 +38,8 @@ class Join extends _Plugin.default {
       inventory: user.inventory.list,
       igloos: user.iglooInventory.list,
       furniture: user.furnitureInventory.list,
-      stamps: user.stamps.list
+      stamps: user.stamps.list,
+      postcards: user.postcards
     });
   }
 

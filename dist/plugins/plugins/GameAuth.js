@@ -100,6 +100,7 @@ class GameAuth extends _Plugin.default {
     user.setIglooInventory(await user.db.getIglooInventory(user.data.id));
     user.setFurnitureInventory(await user.db.getFurnitureInventory(user.data.id));
     user.setStamps(await user.db.getStamps(user.data.id));
+    user.setPostcards(await user.db.getPostcards(user.data.id));
     user.authenticated = true; // Send response
 
     user.send('game_auth', {

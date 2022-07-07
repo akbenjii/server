@@ -47,6 +47,7 @@ class User {
       this.timePlayed++;
     }, 1000);
     this.partyData = {};
+    this.setPuffleDecay();
   }
 
   get string() {
@@ -109,6 +110,10 @@ class User {
 
   setStamps(stamps) {
     this.stamps = new _Stamps.default(this, stamps);
+  }
+
+  setPostcards(postcards) {
+    this.postcards = postcards;
   }
 
   setItem(slot, item) {
@@ -207,6 +212,122 @@ class User {
     this.closeInactive = setTimeout(() => {
       this.close();
     }, 3600000);
+  }
+
+  async setPuffleDecay() {
+    if (!this.data) return setTimeout(() => this.setPuffleDecay(), 1000);
+    let puffles = await this.db.userPuffles.findAll({
+      where: {
+        userId: this.data.id
+      }
+    });
+    let loginLength = new Date().getTime() - new Date(this.data.last_login).getTime();
+    let decay = Math.floor(Math.floor(loginLength / 1000 / 60 / 60 / 24) * 3.5);
+
+    for (let puffle of puffles) {
+      let food = puffle.dataValues.food - decay;
+      let play = puffle.dataValues.play - decay;
+      let rest = puffle.dataValues.rest - decay;
+      let clean = puffle.dataValues.clean - decay;
+      if (play < 0) play = 0;
+      if (rest < 0) rest = 0;
+      if (clean < 0) clean = 0;
+
+      if (food < 0 || play + rest + clean < 0) {
+        await this.db.userPuffles.destroy({
+          where: {
+            id: puffle.dataValues.id
+          }
+        });
+        let postcard;
+
+        switch (puffle.dataValues.color) {
+          case '0':
+            postcard = 100;
+            break;
+
+          case '1':
+            postcard = 101;
+            break;
+
+          case '2':
+            postcard = 102;
+            break;
+
+          case '3':
+            postcard = 103;
+            break;
+
+          case '4':
+            postcard = 104;
+            break;
+
+          case '5':
+            postcard = 105;
+            break;
+
+          case '6':
+            postcard = 106;
+            break;
+
+          case '7':
+            postcard = 107;
+            break;
+
+          case '8':
+            postcard = 108;
+            break;
+
+          case '9':
+            postcard = 109;
+            break;
+
+          case '10':
+            postcard = 185;
+            break;
+
+          case '11':
+            postcard = 238;
+            break;
+
+          default:
+            postcard = 100;
+            break;
+        }
+
+        let postcardEntry = await this.db.userPostcards.create({
+          userId: user.data.id,
+          id: postcard,
+          sender: "Club Penguin Forever",
+          details: puffle.dataValues.name
+        });
+
+        if (postcardEntry) {
+          this.postcards = await this.db.getPostcards(this.data.id);
+          this.send('update_postcards', {
+            postcards: this.postcards
+          });
+        }
+
+        continue;
+      }
+
+      this.db.userPuffles.update({
+        food: food,
+        play: play,
+        rest: rest,
+        clean: clean
+      }, {
+        where: {
+          id: puffle.dataValues.id
+        }
+      });
+    }
+
+    this.data.last_login = new Date();
+    this.update({
+      last_login: this.data.last_login
+    });
   }
 
 }

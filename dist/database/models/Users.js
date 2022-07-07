@@ -156,7 +156,7 @@ class Users extends _sequelize.default.Model {
       },
       last_login: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: false
       }
     }, {
       sequelize,

@@ -751,6 +751,16 @@ class Database {
     handler.partyData.blueLeaderboard = blueTeamScores;
     handler.partyData.redLeaderboard = redTeamScores;
   }
+
+  async getPostcards(userId) {
+    let postcards = await this.findAll('userPostcards', {
+      where: {
+        userId: userId
+      },
+      attributes: ['id', 'userId', 'sender', 'time_sent', 'details']
+    });
+    return postcards;
+  }
   /*========== Helper functions ==========*/
 
 

@@ -10,7 +10,8 @@ export default class Actions extends Plugin {
             'send_frame': this.sendFrame,
             'snowball': this.snowball,
             'stamp_earned': this.stampEarned,
-            'save_stampbook': this.saveStampbook
+            'save_stampbook': this.saveStampbook,
+            'report_player': this.reportPlayer
         }
     }
 
@@ -77,6 +78,14 @@ export default class Actions extends Plugin {
             stampbookClasp: user.data.stampbookClasp,
             stampbookPattern: user.data.stampbookPattern
         })
+    }
+
+    async reportPlayer(args, user) {
+        let userName = (await this.db.getUserById(args.id)).username
+
+        if (userName) {
+            this.discord.reportPlayer(args.reason, userName, args.id, user.data.username)
+        }
     }
 
 }

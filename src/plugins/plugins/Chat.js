@@ -60,17 +60,19 @@ export default class    Chat extends Plugin {
                     })
                     user.room.send(user, 'filtered_message', {
                         id: user.data.id,
-                        message: args.message
-                    }, [user], true)
+                        message: args.message,
+                        filter: 'perspectiveapi'
+                    }, [], true)
+                    user.logChat(args.message, true, 'perspectiveapi')
                     return
                 }
             } catch (err) {
                 this.discord.errorAlert("Perspective API Error")
             }
 
-            var specificFilterWords = ['ass', 'hoe', 'nga', "fu", "af", "asf", "hell", "dic"]
-            var filterWords = ["nigger","nigga","faggot","niggr","ngga","fck","fk","niqqa","niqqer","faqqot","faggt","fag","faq","fuq","fuk","nood","nudes","noodes","slxt","cxnt","b!tch","bish","bich","bxtch","pxssy","poosy","pusea","pusy","bunda","puzzy","arse","azz","nxgger","niger","n!ger","n!g","nigg","nxgga","nga","nger","fxck","fucc","fuc","fuk","fxk","phuck","phuc","phxc","cxm","vxg","vag","forn","porn","pen!s","pxn!s","pxnis","penxs","mxther","motherfxcker","mofo","whore","whxre","whor","coc","cxck","sh!t","effin","eff!n","effxn","twt","twxt","thwat","sxx","sex","tass","ashole","ashxle","d!c","d!k","dik","bxxb","boob","lmao","lmfao","cuck","peen","penls","dick","hoes","stfu","cunt","handjob","blowie","drugs","damn","kkk","piss","penis","tiddies","bitch","slut","shit","kill","suicide","lawda","tiddy","titties","titty","pussy","ussy","weiner","wiener","ween","undress","threesome","orgy","intercourse","nipples","vibrator","anus","anal","ejaculate","vulva","clit","cum","rape","fuddi","genital","chlamydia","aids","hiv","segsy", "segg", "nude","biddies","squirting","sect","tf","orgasm","creampie","creamed","oral","dam","vape","tequila","vodka","weed","bourbon","nug","roach","marijuana","alcohol","queef","blowjob","blow","ovulating","punani","puss","sperm","fertile","twat"];
-            var wordWhitelist = ['shoes', 'afk', 'coco', 'engage', 'echoes', 'snowshoes', 'horseshoes', 'shoestrings', 'offkey', 'saltwater', 'wristwatch']
+            var specificFilterWords = ['ass', 'hoe', 'nga', "fu", "af", "asf", "hell", "dic", "fk"]
+            var filterWords = ["nigger","nigga","faggot","niggr","ngga","fck","niqqa","niqqer","faqqot","faggt","fag","faq","fuq","fuk","nood","nudes","noodes","slxt","cxnt","b!tch","bish","bich","bxtch","pxssy","poosy","pusea","pusy","bunda","puzzy","arse","azz","nxgger","niger","n!ger","n!g","nigg","nxgga","nga","nger","fxck","fucc","fuc","fuk","fxk","phuck","phuc","phxc","cxm","vxg","vag","forn","porn","pen!s","pxn!s","pxnis","penxs","mxther","motherfxcker","mofo","whore","whxre","whor","coc","cxck","sh!t","effin","eff!n","effxn","twt","twxt","thwat","sxx","sex","tass","ashole","ashxle","d!c","d!k","dik","bxxb","boob","lmao","lmfao","cuck","peen","penls","dick","hoes","stfu","cunt","handjob","blowie","drugs","damn","kkk","piss","penis","tiddies","bitch","slut","shit","kill","suicide","lawda","tiddy","titties","titty","pussy","ussy","weiner","wiener","ween","undress","threesome","orgy","intercourse","nipples","vibrator","anus","anal","ejaculate","vulva","clit","cum","rape","fuddi","genital","chlamydia","aids","hiv","segsy", "segg", "nude","biddies","squirting","sect","tf","orgasm","creampie","creamed","oral","dam","vape","tequila","vodka","weed","bourbon","nug","roach","marijuana","alcohol","queef","blowjob","blow","ovulating","punani","puss","sperm","fertile","twat"];
+            var wordWhitelist = ['shoes', 'afk', 'coco', 'engage', 'echoes', 'snowshoes', 'horseshoes', 'shoestrings', 'offkey', 'saltwater', 'wristwatch', 'outfit', 'longer', 'thoughtful', 'halloween', 'mermaid', 'restful', 'therapeutic', 'ginger', 'singer', 'grape', 'noodle', 'vague', 'floral', 'skills', 'rubbish', 'california', 'nugget', 'between', 'jazz', 'circumstance', 'approach', 'anger', 'analysis', 'analyze'];
 
             var words = args.message.toLowerCase().split(" ")
 
@@ -80,6 +82,7 @@ export default class    Chat extends Plugin {
             for (var x in words) {
                 if (filterWords.includes(words[x]) || specificFilterWords.includes(words[x])) {
                     contains = true
+                    offendingWord = words[x]
                     continue
                 }
                 if (!wordWhitelist.includes(words[x])) {
@@ -96,9 +99,9 @@ export default class    Chat extends Plugin {
                 user.messagesSentThisSession++
                 user.room.send(user, 'send_message', {
                     id: user.data.id,
-                    message: args.message,
-                    filter: 'perspectiveapi'
-                }, [user], true)
+                    message: args.message
+                }, [], true)
+                user.logChat(args.message)
             }
             else {
                 user.send('error', {
@@ -108,7 +111,8 @@ export default class    Chat extends Plugin {
                     id: user.data.id,
                     message: args.message,
                     filter: 'manual'
-                }, [user], true)
+                }, [], true)
+                user.logChat(args.message, true, `manual filter because of ${offendingWord}`)
             }
         })();
     }
@@ -117,14 +121,14 @@ export default class    Chat extends Plugin {
         user.room.send(user, 'send_safe', {
             id: user.data.id,
             safe: args.safe
-        }, [user], true)
+        }, [], true)
     }
 
     sendEmote(args, user) {
         user.room.send(user, 'send_emote', {
             id: user.data.id,
             emote: args.emote
-        }, [user], true)
+        }, [], true)
     }
 
     // Commands

@@ -19,7 +19,7 @@ export default class Buddy extends Plugin {
 
         // Send request to recipient if they are online
         if (recipient) {
-            recipient.buddy.addRequest(user.data.id, user.data.username)
+            recipient.buddy.addRequest(user.data.id, this.filterUsername(user.data))
         }
     }
 
@@ -37,13 +37,21 @@ export default class Buddy extends Plugin {
         // Add to requester buddy list
         let requester = this.usersById[args.id]
         if (requester) {
-            requester.buddy.addBuddy(user.data.id, user.data.username, true)
+            requester.buddy.addBuddy(user.data.id, this.filterUsername(user.data), true)
         }
 
         // Db queries
         this.db.buddies.create({ userId: user.data.id, buddyId: args.id })
         this.db.buddies.create({ userId: args.id, buddyId: user.data.id })
     }
+
+    filterUsername(penguin) {
+		if (penguin.username_approved == 1) {
+            return penguin.username
+        } else {
+            return "P" + penguin.id
+        }
+	}
 
     buddyReject(args, user) {
         // Remove request

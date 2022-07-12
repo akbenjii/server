@@ -22,12 +22,20 @@ export default class Buddy {
 
             // Online status here is only used on initial load or adding of a new buddy,
             // further requests should use isOnline to stay updated.
-            this.list.push({ id: user.id, username: user.username, online: online })
+            this.list.push({ id: user.id, username: this.filterUsername(user), online: online })
 
             // Send online status to buddy
             if (online) this.sendOnline(user.id)
         }
     }
+
+	filterUsername(penguin) {
+		if (penguin.username_approved == 1) {
+            return penguin.username
+        } else {
+            return "P" + penguin.id
+        }
+	}
 
     includes(buddy) {
         return this.flat.includes(buddy)

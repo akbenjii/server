@@ -14,7 +14,13 @@ export default class OpenIgloos {
 
     add(user) {
         if (!this.includes(user.data.id)) {
-            this.list.push({ id: user.data.id, username: user.data.username })
+            let username;
+            if (user.data.username_approved == 1) {
+                username =  user.data.username
+            } else {
+                username =  "P" + user.data.id
+            }
+            this.list.push({ id: user.data.id, username: username })
         }
     }
 

@@ -107,8 +107,14 @@ export default class Get extends Plugin {
         let stamps = await this.db.getStamps(args.user)
         let target = await this.db.getUserById(args.user)
         let inventory = await this.db.getInventory(args.user)
+        let username = "";
+        if (target.dataValues.username_approved == 1) {
+            username = target.dataValues.username
+        } else {
+            username = "P" + target.dataValues.id
+        }
 
-        user.send('get_stampbook', { username: target.dataValues.username, stamps: stamps, color: target.dataValues.stampbookColor, clasp: target.dataValues.stampbookClasp, pattern: target.dataValues.stampbookPattern, inventory: inventory })
+        user.send('get_stampbook', { username: username, stamps: stamps, color: target.dataValues.stampbookColor, clasp: target.dataValues.stampbookClasp, pattern: target.dataValues.stampbookPattern, inventory: inventory })
     }
 
     async getMascots(args, user) {
